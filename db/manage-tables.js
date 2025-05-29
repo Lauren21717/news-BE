@@ -1,3 +1,5 @@
+const db = require("./connection");
+
 exports.dropTables = () => {
     return db.query(`DROP TABLE IF EXISTS comments;`)
       .then(() => {
