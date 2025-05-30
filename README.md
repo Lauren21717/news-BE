@@ -61,3 +61,32 @@ Populate the development database with data:
 ```bash
 npm run seed-dev
 ```
+
+### 4. Testing
+
+Run the data base tests to verify your setup:
+```bash
+npm run test-seed
+```
+
+## Database Schema
+
+The NC News API uses a PostgreSQL database with the following structure:
+- ![Entity Relationship Diagram](static/media/dbschema.png)
+
+### Core Tables
+- **topics**: News categories
+- **users**: Registered users who can write articles and comments
+- **articles**: News articles written by users
+- **comments**: User comments on articles
+
+### Advanced Features
+- **emojis**: Available emoji reactions
+- **user_topic**: Tracks which topics users follow
+- **emoji_article_user**: Logs emoji reactions on articles
+
+### Key Relationships
+- Users can write multiple articles and comments
+- Articles belong to topics and can have many comments
+- Users can follow multiple topics (many-to-many via user_topic)
+- Users can react to articles with emojis (many-to-many via emoji_article_user)
