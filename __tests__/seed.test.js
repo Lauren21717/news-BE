@@ -541,6 +541,305 @@ describe('seed', () => {
     });
 
   });
+
+  describe('emojis table', () => {
+    test('emojis table exists', () => {
+      return db
+        .query(
+          `SELECT EXISTS (
+            SELECT FROM 
+                information_schema.tables 
+            WHERE 
+                table_name = 'emojis'
+            );`
+        )
+        .then(({ rows: [{ exists }] }) => {
+          expect(exists).toBe(true);
+        });
+    });
+  
+    test('emojis table has emoji_id column as serial', () => {
+      return db
+        .query(
+          `SELECT column_name, data_type, column_default
+            FROM information_schema.columns
+            WHERE table_name = 'emojis'
+            AND column_name = 'emoji_id';`
+        )
+        .then(({ rows: [column] }) => {
+          expect(column.column_name).toBe('emoji_id');
+          expect(column.data_type).toBe('integer');
+          expect(column.column_default).toBe(
+            "nextval('emojis_emoji_id_seq'::regclass)"
+          );
+        });
+    });
+  
+    test('emojis table has emoji_id column as the primary key', () => {
+      return db
+        .query(
+          `SELECT column_name
+            FROM information_schema.table_constraints AS tc
+            JOIN information_schema.key_column_usage AS kcu
+            ON tc.constraint_name = kcu.constraint_name
+            WHERE tc.constraint_type = 'PRIMARY KEY'
+            AND tc.table_name = 'emojis';`
+        )
+        .then(({ rows: [{ column_name }] }) => {
+          expect(column_name).toBe('emoji_id');
+        });
+    });
+  
+    test('emojis table has emoji column as varying character', () => {
+      return db
+        .query(
+          `SELECT column_name, data_type
+            FROM information_schema.columns
+            WHERE table_name = 'emojis'
+            AND column_name = 'emoji';`
+        )
+        .then(({ rows: [column] }) => {
+          expect(column.column_name).toBe('emoji');
+          expect(column.data_type).toBe('character varying');
+        });
+    });
+  
+    test('emojis table has emoji_name column as varying character with unique constraint', () => {
+      return db
+        .query(
+          `SELECT column_name, data_type
+            FROM information_schema.columns
+            WHERE table_name = 'emojis'
+            AND column_name = 'emoji_name';`
+        )
+        .then(({ rows: [column] }) => {
+          expect(column.column_name).toBe('emoji_name');
+          expect(column.data_type).toBe('character varying');
+        });
+    });
+  
+    test('emoji_name column has unique constraint', () => {
+      return db.query(`
+        SELECT *
+        FROM information_schema.table_constraints
+        WHERE constraint_type = 'UNIQUE'
+          AND table_name = 'emojis'
+          AND constraint_name LIKE '%emoji_name%';
+      `).then(({ rows }) => {
+        expect(rows.length).toBeGreaterThan(0);
+      });
+    });
+  });
+
+  describe('user_topic table', () => {
+    test('user_topic table exists', () => {
+      return db
+      .query(
+        `SELECT EXISTS (
+          SELECT FROM 
+              information_schema.tables 
+          WHERE 
+              table_name = 'user_topic'
+          );`
+      )
+      .then(({ rows: [{ exists }] }) => {
+        expect(exists).toBe(true);
+      });
+    });
+
+    test('user_topic has user_topic_id column as serial', () => {
+      return db
+      .query(
+        `SELECT column_name, data_type, column_default
+          FROM information_schema.columns
+          WHERE table_name = 'user_topic'
+          AND column_name = 'user_topic_id';`
+      )
+      .then(({ rows: [ column ] }) => {
+        expect(column.column_name).toBe('user_topic_id');
+        expect(column.data_type).toBe('integer');
+        expect(column.column_default).toBe(
+          "nextval('user_topic_user_topic_id_seq'::regclass)"
+        );
+      });
+    });
+
+    test('user_topic table has user_topic_id column as primary key', () => {
+      return db
+      .query(
+        `SELECT column_name
+          FROM information_schema.table_constraints AS tc
+          JOIN information_schema.key_column_usage AS kcu
+          ON tc.constraint_name = kcu.constraint_name
+          WHERE tc.constraint_type = 'PRIMARY KEY'
+          AND tc.table_name = 'user_topic';`
+      )
+      .then(({ rows: [{ column_name }] }) => {
+        expect(column_name).toBe('user_topic_id');
+      });
+    });
+
+    test('username column references a username from the users table', () => {
+      return db.query(`
+        SELECT *
+        FROM information_schema.table_constraints AS tc
+        JOIN information_schema.key_column_usage AS kcu
+          ON tc.constraint_name = kcu.constraint_name
+        JOIN information_schema.constraint_column_usage AS ccu
+          ON ccu.constraint_name = tc.constraint_name
+        WHERE tc.constraint_type = 'FOREIGN KEY'
+          AND tc.table_name = 'user_topic'
+          AND kcu.column_name = 'username'
+          AND ccu.table_name = 'users'
+          AND ccu.column_name = 'username';
+      `).then(({ rows }) => {
+        expect(rows).toHaveLength(1); 
+      });
+    });
+
+    test('topic column references a alug from the topics table', () => {
+      return db.query(`
+        SELECT *
+        FROM information_schema.table_constraints AS tc
+        JOIN information_schema.key_column_usage AS kcu
+          ON tc.constraint_name = kcu.constraint_name
+        JOIN information_schema.constraint_column_usage AS ccu
+          ON ccu.constraint_name = tc.constraint_name
+        WHERE tc.constraint_type = 'FOREIGN KEY'
+          AND tc.table_name = 'user_topic'
+          AND kcu.column_name = 'topic'
+          AND ccu.table_name = 'topics'
+          AND ccu.column_name = 'slug';
+      `).then(({ rows }) => {
+        expect(rows).toHaveLength(1); 
+      });
+    });
+
+    test('user_topic has unique constraint on username and topic combination', () => {
+      return db.query(`
+        SELECT *
+        FROM information_schema.table_constraints
+        WHERE constraint_type = 'UNIQUE'
+          AND table_name = 'user_topic';
+      `).then(({ rows }) => {
+        expect(rows.length).toBeGreaterThan(0);
+      });
+    });
+  });
+
+  describe('emoji_article_user table', () => {
+    test('emoji_article_user table exists', () => {
+      return db
+      .query(
+        `SELECT EXISTS (
+          SELECT FROM 
+              information_schema.tables 
+          WHERE 
+              table_name = 'emoji_article_user'
+          );`
+      )
+      .then(({ rows: [{ exists }] }) => {
+        expect(exists).toBe(true);
+      });
+    });
+
+    test('emoji_article_user table has emoji_article_user_id column as serial', () => {
+      return db
+      .query(
+        `SELECT column_name, data_type, column_default
+          FROM information_schema.columns
+          WHERE table_name = 'emoji_article_user'
+          AND column_name = 'emoji_article_user_id';`
+      )
+      .then(({ rows: [column] }) => {
+        expect(column.column_name).toBe('emoji_article_user_id');
+        expect(column.data_type).toBe('integer');
+        expect(column.column_default).toBe(
+          "nextval('emoji_article_user_emoji_article_user_id_seq'::regclass)"
+        );
+      });
+    });
+
+    test('emoji_article_user table has emoji_article_user_id column as the primary key', () => {
+      return db
+      .query(
+        `SELECT column_name
+          FROM information_schema.table_constraints AS tc
+          JOIN information_schema.key_column_usage AS kcu
+          ON tc.constraint_name = kcu.constraint_name
+          WHERE tc.constraint_type = 'PRIMARY KEY'
+          AND tc.table_name = 'emoji_article_user';`
+      )
+      .then(({ rows: [{ column_name }] }) => {
+        expect(column_name).toBe('emoji_article_user_id');
+      });
+    });
+
+    test('emoji_id column references an emoji from the emojis table', () => {
+      return db.query(`
+        SELECT *
+        FROM information_schema.table_constraints AS tc
+        JOIN information_schema.key_column_usage AS kcu
+          ON tc.constraint_name = kcu.constraint_name
+        JOIN information_schema.constraint_column_usage AS ccu
+          ON ccu.constraint_name = tc.constraint_name
+        WHERE tc.constraint_type = 'FOREIGN KEY'
+          AND tc.table_name = 'emoji_article_user'
+          AND kcu.column_name = 'emoji_id'
+          AND ccu.table_name = 'emojis'
+          AND ccu.column_name = 'emoji_id';
+      `).then(({ rows }) => {
+        expect(rows).toHaveLength(1); 
+      });
+    });
+
+    test('username column references a username from the users table', () => {
+      return db.query(`
+        SELECT *
+        FROM information_schema.table_constraints AS tc
+        JOIN information_schema.key_column_usage AS kcu
+          ON tc.constraint_name = kcu.constraint_name
+        JOIN information_schema.constraint_column_usage AS ccu
+          ON ccu.constraint_name = tc.constraint_name
+        WHERE tc.constraint_type = 'FOREIGN KEY'
+          AND tc.table_name = 'emoji_article_user'
+          AND kcu.column_name = 'username'
+          AND ccu.table_name = 'users'
+          AND ccu.column_name = 'username';
+      `).then(({ rows }) => {
+        expect(rows).toHaveLength(1); 
+      });
+    });
+
+    test('article_id column references an article from the articles table', () => {
+      return db.query(`
+        SELECT *
+        FROM information_schema.table_constraints AS tc
+        JOIN information_schema.key_column_usage AS kcu
+          ON tc.constraint_name = kcu.constraint_name
+        JOIN information_schema.constraint_column_usage AS ccu
+          ON ccu.constraint_name = tc.constraint_name
+        WHERE tc.constraint_type = 'FOREIGN KEY'
+          AND tc.table_name = 'emoji_article_user'
+          AND kcu.column_name = 'article_id'
+          AND ccu.table_name = 'articles'
+          AND ccu.column_name = 'article_id';
+      `).then(({ rows }) => {
+        expect(rows).toHaveLength(1); 
+      });
+    });
+
+    test('emoji_article_user has unique constraint on emoji_id, username and article_id combination', () => {
+      return db.query(`
+        SELECT *
+        FROM information_schema.table_constraints
+        WHERE constraint_type = 'UNIQUE'
+          AND table_name = 'emoji_article_user';
+      `).then(({ rows }) => {
+        expect(rows.length).toBeGreaterThan(0);
+      });
+    });
+  });
 });
 
 describe('data insertion', () => {
@@ -593,6 +892,42 @@ describe('data insertion', () => {
         expect(comment).toHaveProperty('author');
         expect(comment).toHaveProperty('votes');
         expect(comment).toHaveProperty('created_at');
+      });
+    });
+  });
+
+  test('emojis data has been inserted correctly', () => {
+    return db.query(`SELECT * FROM emojis;`).then(({ rows: emojis }) => {
+      expect(emojis).toHaveLength(4);
+      emojis.forEach((emoji) => {
+        expect(emoji).toHaveProperty('emoji_id');
+        expect(emoji).toHaveProperty('emoji');
+        expect(emoji).toHaveProperty('emoji_name');
+      });
+    });
+  });
+
+  test('user_topic data has been inserted correctly', () => {
+    return db.query(`SELECT * FROM user_topic;`).then(({ rows: userTopics }) => {
+      expect(userTopics).toHaveLength(4);
+      userTopics.forEach((userTopic) => {
+        expect(userTopic).toHaveProperty('user_topic_id');
+        expect(userTopic).toHaveProperty('username');
+        expect(userTopic).toHaveProperty('topic');
+        expect(userTopic).toHaveProperty('created_at');
+      });
+    });
+  });
+
+  test('emoji_article_user data has been inserted correctly', () => {
+    return db.query(`select * from emoji_article_user;`).then(({ rows: reactions }) => {
+      expect(reactions).toHaveLength(4);
+      reactions.forEach((reaction) => {
+        expect(reaction).toHaveProperty('emoji_article_user_id');
+        expect(reaction).toHaveProperty('emoji_id');
+        expect(reaction).toHaveProperty('username');
+        expect(reaction).toHaveProperty('article_id');
+        expect(reaction).toHaveProperty('created_at');
       });
     });
   });

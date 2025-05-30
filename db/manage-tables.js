@@ -1,7 +1,16 @@
 const db = require("./connection");
 
 exports.dropTables = () => {
-    return db.query(`DROP TABLE IF EXISTS comments;`)
+    return db.query(`DROP TABLE IF EXISTS emoji_article_user;`)
+      .then(() => {
+        return db.query(`DROP TABLE IF EXISTS user_topic;`);
+      })
+      .then(() => {
+        return db.query(`DROP TABLE IF EXISTS emojis;`);
+      })
+      .then(() => {
+        return db.query(`DROP TABLE IF EXISTS comments;`);
+      })
       .then(() => {
         return db.query(`DROP TABLE IF EXISTS articles;`);
       })
@@ -9,7 +18,7 @@ exports.dropTables = () => {
         return db.query(`DROP TABLE IF EXISTS users;`);
       })
       .then(() => {
-        return db.query(`DROP TABLE IF EXISTS topics;`);
+        return db.query(`DROP TABLE IF EXISTS topics;`);       
       });
   };
   
@@ -50,6 +59,35 @@ exports.createTables = () => {
                 votes INTEGER DEFAULT 0,
                 author VARCHAR NOT NULL REFERENCES users(username),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );`);
+    })
+    .then(() => {
+        return db.query(
+            `CREATE TABLE emojis (
+                emoji_id SERIAL PRIMARY KEY,
+                emoji VARCHAR NOT NULL,
+                emoji_name VARCHAR NOT NULL UNIQUE
+            );`);
+    })
+    .then(() => {
+        return db.query(
+            `CREATE TABLE user_topic (
+                user_topic_id SERIAL PRIMARY KEY,
+                username VARCHAR NOT NULL REFERENCES users(username),
+                topic VARCHAR NOT NULL REFERENCES topics(slug),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(username, topic)
+            );`);
+    })
+    .then(() => {
+        return db.query(
+            `CREATE TABLE emoji_article_user (
+                emoji_article_user_id SERIAL PRIMARY KEY,
+                emoji_id INTEGER NOT NULL REFERENCES emojis(emoji_id),
+                username VARCHAR NOT NULL REFERENCES users(username),
+                article_id INTEGER NOT NULL REFERENCES articles(article_id),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(emoji_id, username, article_id)
             );`);
     })
 }

@@ -1,10 +1,16 @@
 const db = require("../connection");
 const format = require("pg-format");
-
 const { dropTables, createTables } = require('../manage-tables');
 const { convertTimestampToDate } = require('./utils');
 
-const seed = ({ topicData, userData, articleData, commentData }) => {
+const seed = ({ 
+  topicData, userData, 
+  articleData, commentData, 
+  emojiData, userFollowsData, 
+  emojiReactionsData 
+}) => {
+  let articlesInsertResult;
+
   return dropTables()
     .then(() => {
       return createTables();
@@ -16,10 +22,20 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       return insertUsers(userData);
     })
     .then(() => {
+      return insertEmojis(emojiData);
+    })
+    .then(() => {
       return insertArticles(articleData);
     })
-    .then((articleInsertResult) => {
-      return insertComments(commentData, articleInsertResult.rows);
+    .then((result) => {
+      articlesInsertResult = result;
+      return insertComments(commentData, result.rows);
+    })
+    .then(() => {
+      return insertUserFollows(userFollowsData);
+    })
+    .then(() => {
+      return insertEmojiReactions(emojiReactionsData, articlesInsertResult.rows);
     });
 };
 
@@ -69,7 +85,7 @@ const insertArticles = (articleData) => {
       article_img_url
     ])
   );
-  return db.query(articlesInsertStr)
+  return db.query(articlesInsertStr);
 };
 
 const insertComments = (commentData, articles) => {
@@ -94,4 +110,60 @@ const insertComments = (commentData, articles) => {
   );
   return db.query(commentsInsertStr);
 };
+
+const insertEmojis = (emojiData) => {
+  const emojiInsertStr = format(
+    `INSERT INTO emojis
+      (emoji, emoji_name)
+      VALUES %L
+      RETURNING *;`,
+    emojiData.map(({ emoji, emoji_name }) => [
+      emoji,
+      emoji_name
+    ])
+  );
+  return db.query(emojiInsertStr);
+};
+
+const insertUserFollows = (userFollowsData) => {
+  const userFollowsInsertStr = format(
+    `INSERT INTO user_topic
+      (username, topic)
+      VALUES %L;`,
+    userFollowsData.map(({ username, topic }) => [
+      username,
+      topic
+    ])
+  );
+  return db.query(userFollowsInsertStr);
+};
+
+const insertEmojiReactions = (emojiReactionsData, articles) => {
+  const articleRef = articles.reduce((lookup, article) => {
+    lookup[article.title] = article.article_id;
+    return lookup;
+  }, {});
+
+  return db.query(`SELECT * FROM emojis;`)
+    .then(({ rows: emojis }) => {
+      const emojiRef = emojis.reduce((lookup, emoji) => {
+        lookup[emoji.emoji_name] = emoji.emoji_id;
+        return lookup;
+      }, {});
+
+      const reactionsInsertStr = format(
+        `INSERT INTO emoji_article_user
+          (emoji_id, username, article_id)
+          VALUES %L;`,
+        emojiReactionsData.map((reaction) => [
+          emojiRef[reaction.emoji_name],
+          reaction.username,
+          articleRef[reaction.article_title]
+        ])
+      );
+
+      return db.query(reactionsInsertStr);
+    });
+};
+
 module.exports = seed;
