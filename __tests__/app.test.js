@@ -7,7 +7,7 @@ const endpointsJson = require("../endpoints.json");
 
 // Seed test data before each test
 beforeEach(() => {
-  return seed(testData)
+  return seed(testData);
 });
 
 // Close db connection after each test
@@ -27,12 +27,26 @@ describe("GET /api", () => {
 });
 
 describe('GET /api/topics', () => {
-  test('200: responds with an array of topic objects', () => {
+  test('200: responds with status 200', () => {
     return request(app)
-      .get("/api/topics")
+      .get('/api/topics')
+      .expect(200);
+  });
+
+  test('200: responds with correct number of topics', () => {
+    return request(app)
+      .get('/api/topics')
       .expect(200)
       .then(({ body }) => {
         expect(body.topics).toHaveLength(3);
+      });
+  });
+
+  test('200: each topic has the correct properties', () => {
+    return request(app)
+      .get('/api/topics')
+      .expect(200)
+      .then(({ body }) => {
         body.topics.forEach((topic) => {
           expect(topic).toMatchObject({
             slug: expect.any(String),
@@ -43,3 +57,61 @@ describe('GET /api/topics', () => {
       });
   });
 });
+
+describe('GET /api/articles', () => {
+  test('200: responds with status 200', () => {
+    return request(app)
+      .get('/api/articles')
+      .expect(200);
+  });
+
+  test('200: responds with correct number of articles', () => {
+    return request(app)
+      .get('/api/articles')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toHaveLength(13);
+      });
+  });
+
+  test('200: articles are sorted by created_at in descending order', () => {
+    return request(app)
+      .get('/api/articles')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy('created_at', { descending: true });
+      });
+  });
+
+  test('200: each article has the correct properties', () => {
+    return request(app)
+      .get('/api/articles')
+      .expect(200)
+      .then(({ body }) => {
+        body.articles.forEach((article) => {
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number)
+          });
+        });
+      });
+  });
+
+  test('200: articles do not include body property', () => {
+    return request(app)
+      .get('/api/articles')
+      .expect(200)
+      .then(({ body }) => {
+        body.articles.forEach((article) => {
+          expect(article).not.toHaveProperty('body');
+        });
+      });
+  });
+});
+
