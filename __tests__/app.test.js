@@ -146,3 +146,48 @@ describe('GET /api/users', () => {
           });
   });
 });
+
+describe('GET /api/articles/:article_id', () => {
+  test('200: responds with status 200', () => {
+      return request(app)
+          .get('/api/articles/1')
+          .expect(200);
+  });
+
+  test('200: responds with a single article object', () => {
+      return request(app)
+          .get('/api/articles/1')
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.article).toMatchObject({
+                  article_id: 1,
+                  title: expect.any(String),
+                  topic: expect.any(String),
+                  author: expect.any(String),
+                  body: expect.any(String),
+                  created_at: expect.any(String),
+                  votes: expect.any(Number),
+                  article_img_url: expect.any(String),
+                  comment_count: expect.any(Number)
+              });
+          });
+  });
+
+  test('404: responds with error when article does not exist', () => {
+      return request(app)
+          .get('/api/articles/999')
+          .expect(404)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Article not found');
+          });
+  });
+
+  test('400: responds with error when given invalid article_id', () => {
+      return request(app)
+          .get('/api/articles/not-a-number')
+          .expect(400)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Bad request');
+          });
+  });
+});
