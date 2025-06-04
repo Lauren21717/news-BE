@@ -262,3 +262,99 @@ describe('GET /api/articles/:article_id/comments', () => {
           });
   });
 });
+
+describe('POST /api/articles/:article_id/comments', () => {
+  test('201: responds with status 201', () => {
+      const newComment = {
+          username: 'butter_bridge',
+          body: 'This is a new comment'
+      };
+      
+      return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(201);
+  });
+
+  test('201: responds with the posted comment', () => {
+      const newComment = {
+          username: 'butter_bridge',
+          body: 'This is a new comment'
+      };
+      
+      return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(201)
+          .then(({ body }) => {
+              expect(body.comment).toMatchObject({
+                  comment_id: expect.any(Number),
+                  body: 'This is a new comment',
+                  article_id: 1,
+                  author: 'butter_bridge',
+                  votes: 0,
+                  created_at: expect.any(String)
+              });
+          });
+  });
+
+  test('404: responds with error when article does not exist', () => {
+      const newComment = {
+          username: 'butter_bridge',
+          body: 'This is a new comment'
+      };
+      
+      return request(app)
+          .post('/api/articles/999/comments')
+          .send(newComment)
+          .expect(404)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Not found');
+          });
+  });
+
+  test('400: responds with error when missing required fields', () => {
+      const newComment = {
+          username: 'butter_bridge'
+          // missing body
+      };
+      
+      return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(400)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Bad request');
+          });
+  });
+
+  test('404: responds with error when username does not exist', () => {
+      const newComment = {
+          username: 'nonexistent_user',
+          body: 'This is a new comment'
+      };
+      
+      return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(404)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Not found');
+          });
+  });
+
+  test('400: responds with error when invalid article_id', () => {
+      const newComment = {
+          username: 'butter_bridge',
+          body: 'This is a new comment'
+      };
+      
+      return request(app)
+          .post('/api/articles/not-a-number/comments')
+          .send(newComment)
+          .expect(400)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Bad request');
+          });
+  });
+});
