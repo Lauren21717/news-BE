@@ -358,3 +358,95 @@ describe('POST /api/articles/:article_id/comments', () => {
           });
   });
 });
+
+describe('PATCH /api/articles/:article_id', () => {
+  test('200: responds with status 200', () => {
+      const updateVotes = { inc_votes: 1 };
+      
+      return request(app)
+          .patch('/api/articles/1')
+          .send(updateVotes)
+          .expect(200);
+  });
+
+  test('200: responds with the updated article when incrementing votes', () => {
+      const updateVotes = { inc_votes: 1 };
+      
+      return request(app)
+          .patch('/api/articles/1')
+          .send(updateVotes)
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.article).toMatchObject({
+                  article_id: 1,
+                  title: expect.any(String),
+                  topic: expect.any(String),
+                  author: expect.any(String),
+                  body: expect.any(String),
+                  created_at: expect.any(String),
+                  votes: 101,
+                  article_img_url: expect.any(String)
+              });
+          });
+  });
+
+  test('200: responds with the updated article when decrementing votes', () => {
+      const updateVotes = { inc_votes: -100 };
+      
+      return request(app)
+          .patch('/api/articles/1')
+          .send(updateVotes)
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.article.votes).toBe(0);
+          });
+  });
+
+  test('404: responds with error when article does not exist', () => {
+      const updateVotes = { inc_votes: 1 };
+      
+      return request(app)
+          .patch('/api/articles/999')
+          .send(updateVotes)
+          .expect(404)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Article not found');
+          });
+  });
+
+  test('400: responds with error when inc_votes is missing', () => {
+      const updateVotes = {};
+      
+      return request(app)
+          .patch('/api/articles/1')
+          .send(updateVotes)
+          .expect(400)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Bad request');
+          });
+  });
+
+  test('400: responds with error when inc_votes is not a number', () => {
+      const updateVotes = { inc_votes: 'not-a-number' };
+      
+      return request(app)
+          .patch('/api/articles/1')
+          .send(updateVotes)
+          .expect(400)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Bad request');
+          });
+  });
+
+  test('400: responds with error when invalid article_id', () => {
+      const updateVotes = { inc_votes: 1 };
+      
+      return request(app)
+          .patch('/api/articles/not-a-number')
+          .send(updateVotes)
+          .expect(400)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Bad request');
+          });
+  });
+});
