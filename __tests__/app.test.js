@@ -497,3 +497,68 @@ describe('DELETE /api/comments/:comment_id', () => {
           });
   });
 });
+
+describe('GET /api/articles (sorting queries)', () => {
+  test('200: articles can be sorted by title in ascending order', () => {
+      return request(app)
+          .get('/api/articles?sort_by=title&order=asc')
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.articles).toBeSortedBy('title', { descending: false });
+          });
+  });
+
+  test('200: articles can be sorted by author in descending order', () => {
+      return request(app)
+          .get('/api/articles?sort_by=author&order=desc')
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.articles).toBeSortedBy('author', { descending: true });
+          });
+  });
+
+  test('200: articles can be sorted by votes', () => {
+      return request(app)
+          .get('/api/articles?sort_by=votes')
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.articles).toBeSortedBy('votes', { descending: true });
+          });
+  });
+
+  test('200: articles can be sorted by comment_count', () => {
+      return request(app)
+          .get('/api/articles?sort_by=comment_count&order=asc')
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.articles).toBeSortedBy('comment_count', { descending: false });
+          });
+  });
+
+  test('200: defaults to created_at descending when no query provided', () => {
+      return request(app)
+          .get('/api/articles')
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.articles).toBeSortedBy('created_at', { descending: true });
+          });
+  });
+
+  test('400: responds with error for invalid sort_by column', () => {
+      return request(app)
+          .get('/api/articles?sort_by=invalid_column')
+          .expect(400)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Bad request');
+          });
+  });
+
+  test('400: responds with error for invalid order value', () => {
+      return request(app)
+          .get('/api/articles?order=invalid_order')
+          .expect(400)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Bad request');
+          });
+  });
+});
