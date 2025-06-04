@@ -3,7 +3,7 @@ const { getApi } = require('./controllers/api.controllers');
 const { getTopics } = require('./controllers/topics.controllers');
 const { getArticles, getArticleById, patchArticleById } = require('./controllers/articles.controllers');
 const { getUsers } = require('./controllers/users.controllers');
-const { getCommentsByArticleId, postComment } = require('./controllers/comments.controllers');
+const { getCommentsByArticleId, postComment, deleteCommentById } = require('./controllers/comments.controllers');
 
 const app = express();
 
@@ -22,6 +22,9 @@ app.patch('/api/articles/:article_id', patchArticleById);
 
 // post routes
 app.post('/api/articles/:article_id/comments', postComment);
+
+// delete routes
+app.delete('/api/comments/:comment_id', deleteCommentById);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
