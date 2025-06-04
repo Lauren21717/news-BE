@@ -25,3 +25,21 @@ describe("GET /api", () => {
       });
   });
 });
+
+describe('GET /api/topics', () => {
+  test('200: responds with an array of topic objects', () => {
+    return request(app)
+      .get("/api/topics")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.topics).toHaveLength(3);
+        body.topics.forEach((topic) => {
+          expect(topic).toMatchObject({
+            slug: expect.any(String),
+            description: expect.any(String),
+            img_url: expect.any(String)
+          });
+        });
+      });
+  });
+});
