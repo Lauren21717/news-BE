@@ -1,3 +1,4 @@
 node_modules
 .env.*
-query-results/
+query-results/.DS_Store
+**/.DS_Store

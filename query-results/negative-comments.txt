@@ -1,0 +1,506 @@
+[
+  {
+    "comment_id": 1,
+    "article_id": 18,
+    "body": "Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+    "votes": -1,
+    "author": "tickle122",
+    "created_at": "2020-05-21T22:19:00.000Z"
+  },
+  {
+    "comment_id": 5,
+    "article_id": 17,
+    "body": "Quod qui quia dignissimos sit tempore vel reprehenderit. Ipsa ipsa veritatis architecto corporis et et non. Sed alias occaecati eum dignissimos sint eius. Ad ea iste quas quia velit libero voluptatem voluptatem. Animi illo nisi nulla quia sapiente omnis dolorem nulla. Sunt dolor similique.",
+    "votes": -5,
+    "author": "weegembump",
+    "created_at": "2020-04-03T20:17:00.000Z"
+  },
+  {
+    "comment_id": 6,
+    "article_id": 35,
+    "body": "Veritatis animi et voluptates nesciunt officia facere eaque. Eligendi earum explicabo necessitatibus aut dolorem nisi esse nesciunt. Non iusto rem ut consequuntur quam ut rem sed. Velit laboriosam consectetur enim delectus eos sit veritatis eveniet perspiciatis.",
+    "votes": -5,
+    "author": "grumpy19",
+    "created_at": "2020-07-16T08:16:00.000Z"
+  },
+  {
+    "comment_id": 9,
+    "article_id": 19,
+    "body": "Ea iure voluptas. Esse vero et dignissimos blanditiis commodi rerum dicta omnis modi.",
+    "votes": -1,
+    "author": "cooljmessy",
+    "created_at": "2020-01-04T05:14:00.000Z"
+  },
+  {
+    "comment_id": 14,
+    "article_id": 4,
+    "body": "Iure quas est omnis porro. Est in est distinctio sequi consectetur rerum deserunt. Et et reiciendis. Consequatur distinctio sint porro neque molestiae.",
+    "votes": -4,
+    "author": "weegembump",
+    "created_at": "2020-08-14T13:09:00.000Z"
+  },
+  {
+    "comment_id": 19,
+    "article_id": 28,
+    "body": "Id adipisci saepe dolorum et veritatis qui et voluptatibus. Error consequuntur architecto consequatur assumenda rerum similique quo. Quas omnis quam labore exercitationem pariatur veniam assumenda. Tempore maiores rerum. Eum voluptates non repudiandae magnam illo voluptatum. Qui praesentium asperiores rerum vel.",
+    "votes": -3,
+    "author": "tickle122",
+    "created_at": "2020-06-19T15:03:00.000Z"
+  },
+  {
+    "comment_id": 29,
+    "article_id": 36,
+    "body": "Perferendis quia et nihil. Quasi ut voluptates sapiente et accusantium vel qui reprehenderit ratione. Autem alias voluptatem accusamus nesciunt beatae vero. Itaque repellat omnis et velit cum corporis aut id voluptas. Nostrum unde fuga ea. Perferendis quas maiores.",
+    "votes": -2,
+    "author": "jessjelly",
+    "created_at": "2020-09-13T06:23:00.000Z"
+  },
+  {
+    "comment_id": 35,
+    "article_id": 19,
+    "body": "Accusamus error recusandae iure. Omnis ab aut id. Nihil perspiciatis aut unde recusandae voluptatum placeat.",
+    "votes": -2,
+    "author": "happyamy2016",
+    "created_at": "2020-06-07T07:10:00.000Z"
+  },
+  {
+    "comment_id": 43,
+    "article_id": 8,
+    "body": "Ipsam quis ad consequatur iure voluptas accusantium voluptatem unde. Cumque omnis mollitia natus nemo deleniti rerum enim cumque aut. Quod quis est fuga.",
+    "votes": -2,
+    "author": "grumpy19",
+    "created_at": "2020-01-18T08:17:00.000Z"
+  },
+  {
+    "comment_id": 46,
+    "article_id": 26,
+    "body": "Non sunt quos aut facere. Corporis molestiae aut soluta aut rerum animi voluptatibus.",
+    "votes": -3,
+    "author": "weegembump",
+    "created_at": "2020-10-05T06:05:00.000Z"
+  },
+  {
+    "comment_id": 51,
+    "article_id": 3,
+    "body": "Eius dolor ipsa eaque qui sed accusantium est tenetur omnis. Eligendi necessitatibus sunt voluptate occaecati et quis consequuntur aut. Maxime nihil ut quia culpa.",
+    "votes": -3,
+    "author": "grumpy19",
+    "created_at": "2020-01-14T03:12:00.000Z"
+  },
+  {
+    "comment_id": 55,
+    "article_id": 6,
+    "body": "Ut et libero reiciendis. Tenetur quibusdam veniam in atque corrupti excepturi tenetur qui et. Qui ut autem minus aut explicabo in cumque dolorum. Voluptatem est perferendis velit. Eaque doloremque asperiores error.",
+    "votes": -3,
+    "author": "jessjelly",
+    "created_at": "2020-01-16T23:20:00.000Z"
+  },
+  {
+    "comment_id": 63,
+    "article_id": 2,
+    "body": "Est pariatur quis ipsa culpa unde temporibus et accusantium rerum. Consequatur in occaecati aut non similique aut quibusdam. Qui sunt magnam iure blanditiis. Et est non enim. Est ab vero dolor.",
+    "votes": -1,
+    "author": "jessjelly",
+    "created_at": "2020-08-12T22:10:00.000Z"
+  },
+  {
+    "comment_id": 64,
+    "article_id": 6,
+    "body": "Ad qui ut enim qui numquam quis. Reprehenderit rem non nulla dolor aut totam corporis illo. Et ea maxime consequuntur nihil delectus dolores qui in aliquam. Ut et eius id nesciunt necessitatibus beatae quo. Est qui provident officia in dolor. Assumenda voluptas dolor.",
+    "votes": -5,
+    "author": "grumpy19",
+    "created_at": "2020-09-23T08:15:00.000Z"
+  },
+  {
+    "comment_id": 69,
+    "article_id": 23,
+    "body": "Totam et dolor magnam et voluptatum. A in adipisci.",
+    "votes": -1,
+    "author": "tickle122",
+    "created_at": "2020-08-14T12:08:00.000Z"
+  },
+  {
+    "comment_id": 77,
+    "article_id": 8,
+    "body": "Hic qui omnis qui sit deserunt velit labore commodi repellat. Minus voluptatum dolore libero voluptatem praesentium aut iusto harum. Consequatur sit quasi. Est ad minus inventore ut reiciendis. Quos incidunt rerum. Ut omnis in voluptatum nesciunt.",
+    "votes": -2,
+    "author": "tickle122",
+    "created_at": "2020-11-06T19:20:00.000Z"
+  },
+  {
+    "comment_id": 80,
+    "article_id": 31,
+    "body": "Voluptatem voluptas unde. Quam tempore recusandae voluptatem similique iusto repudiandae et. Tenetur dolores possimus labore. Incidunt quae ipsa qui quas. Sunt suscipit aliquid vitae.",
+    "votes": -5,
+    "author": "cooljmessy",
+    "created_at": "2020-07-14T02:02:00.000Z"
+  },
+  {
+    "comment_id": 82,
+    "article_id": 11,
+    "body": "Facilis ipsam illum aut voluptatibus. Repudiandae cupiditate quo fugiat earum est ut autem repudiandae excepturi. Fuga voluptatem iusto ut. Nulla sequi culpa qui eaque. Architecto non veniam distinctio.",
+    "votes": -4,
+    "author": "happyamy2016",
+    "created_at": "2020-08-19T07:08:00.000Z"
+  },
+  {
+    "comment_id": 83,
+    "article_id": 24,
+    "body": "Velit in assumenda quo repudiandae qui eaque. Qui dolor ad iusto optio magnam suscipit.",
+    "votes": -2,
+    "author": "weegembump",
+    "created_at": "2020-04-08T21:01:00.000Z"
+  },
+  {
+    "comment_id": 88,
+    "article_id": 5,
+    "body": "Minus minus sit non fugiat sunt et nostrum aut et. Dignissimos qui nemo quos fuga qui temporibus occaecati aut. Explicabo dolor commodi officia nulla totam inventore.",
+    "votes": -3,
+    "author": "weegembump",
+    "created_at": "2020-05-26T15:11:00.000Z"
+  },
+  {
+    "comment_id": 94,
+    "article_id": 29,
+    "body": "Voluptatum aut facilis odit sint. Iste ab ut mollitia aut odio. Similique aut a ut est impedit. Similique dolorum possimus ipsum voluptatem iste non commodi placeat quia. Vero aperiam eum voluptatem aut sed totam dicta suscipit.",
+    "votes": -4,
+    "author": "weegembump",
+    "created_at": "2020-04-15T06:17:00.000Z"
+  },
+  {
+    "comment_id": 98,
+    "article_id": 17,
+    "body": "Delectus nostrum autem. Dolore est id veniam maxime aliquid omnis nam cupiditate consequatur. Eveniet similique et voluptatem voluptatem illo. Quam officiis aut molestias hic est omnis. Dolor enim dolores. Quo explicabo reprehenderit reprehenderit nostrum magni in.",
+    "votes": -3,
+    "author": "grumpy19",
+    "created_at": "2020-02-07T02:23:00.000Z"
+  },
+  {
+    "comment_id": 108,
+    "article_id": 17,
+    "body": "Magni similique tempore a quia officiis ipsam ut non. Eum laborum dicta sint illo nihil quia maiores. Reiciendis sit voluptate sed quae iste temporibus.",
+    "votes": -1,
+    "author": "grumpy19",
+    "created_at": "2020-08-02T08:22:00.000Z"
+  },
+  {
+    "comment_id": 113,
+    "article_id": 23,
+    "body": "Accusantium est officiis labore dolorem hic maiores quae quo. Et rerum sequi.",
+    "votes": -3,
+    "author": "cooljmessy",
+    "created_at": "2020-01-17T17:13:00.000Z"
+  },
+  {
+    "comment_id": 114,
+    "article_id": 34,
+    "body": "Eligendi placeat aspernatur omnis delectus maxime inventore at porro. Accusantium nobis totam fugiat debitis quia repellat quo qui voluptatem. Laboriosam nesciunt distinctio et aut itaque ipsa aut. Cum accusantium et et recusandae numquam quas et. Porro minima accusantium atque quo illo.",
+    "votes": -4,
+    "author": "tickle122",
+    "created_at": "2020-05-09T07:11:00.000Z"
+  },
+  {
+    "comment_id": 124,
+    "article_id": 34,
+    "body": "Vitae laudantium molestiae neque ut dicta fuga similique. Sit nesciunt magni sit beatae. Porro recusandae aut exercitationem eligendi voluptas. Dolore eligendi inventore magni voluptatem quia ut ut.",
+    "votes": -1,
+    "author": "grumpy19",
+    "created_at": "2020-10-17T22:05:00.000Z"
+  },
+  {
+    "comment_id": 135,
+    "article_id": 27,
+    "body": "Quam officiis reprehenderit architecto omnis est facere inventore. Expedita est enim dolore debitis velit. Quo facilis accusantium error.",
+    "votes": -1,
+    "author": "happyamy2016",
+    "created_at": "2020-09-07T06:02:00.000Z"
+  },
+  {
+    "comment_id": 137,
+    "article_id": 26,
+    "body": "Nesciunt aliquid ex et architecto beatae fugit. Et delectus quam culpa rerum hic repellendus laudantium est. Non quasi omnis. Deserunt nisi voluptatem asperiores aspernatur mollitia qui. Molestiae sit voluptates et voluptas voluptas consequatur. Corrupti laboriosam consequatur est tenetur consequuntur id.",
+    "votes": -5,
+    "author": "happyamy2016",
+    "created_at": "2020-03-20T02:01:00.000Z"
+  },
+  {
+    "comment_id": 147,
+    "article_id": 27,
+    "body": "Qui qui sit earum et laboriosam non. Nobis distinctio qui et sint perspiciatis qui eum. Doloremque animi quia tenetur harum distinctio et.",
+    "votes": -2,
+    "author": "weegembump",
+    "created_at": "2020-08-23T23:26:00.000Z"
+  },
+  {
+    "comment_id": 150,
+    "article_id": 9,
+    "body": "Doloremque ut reiciendis autem perferendis vel in tempore. Delectus quia illum deleniti fuga dolores dicta velit aut architecto.",
+    "votes": -3,
+    "author": "tickle122",
+    "created_at": "2020-01-17T16:06:00.000Z"
+  },
+  {
+    "comment_id": 158,
+    "article_id": 22,
+    "body": "Voluptatibus laudantium vel consequuntur explicabo voluptatem adipisci eligendi nihil magni. Dolore in molestias ullam sapiente et aperiam. Et aut est placeat porro dolor et modi reiciendis. Enim fuga exercitationem in. Dolore sint laudantium quos sint et aut possimus.",
+    "votes": -5,
+    "author": "happyamy2016",
+    "created_at": "2020-06-09T12:10:00.000Z"
+  },
+  {
+    "comment_id": 159,
+    "article_id": 35,
+    "body": "Veniam natus sed nostrum et aut repellendus. Dignissimos quia cum id odio repudiandae impedit aperiam sapiente. Harum sequi non nihil velit modi. Corporis consequatur enim suscipit eos dignissimos voluptas nobis eum.",
+    "votes": -1,
+    "author": "cooljmessy",
+    "created_at": "2020-09-23T23:05:00.000Z"
+  },
+  {
+    "comment_id": 171,
+    "article_id": 30,
+    "body": "Est voluptas reprehenderit enim necessitatibus blanditiis quia consequatur. Soluta quae quia non veniam corrupti et. Asperiores culpa est ut quam ipsum molestias reiciendis sed molestiae. Ut odit in non odio molestias ab. Voluptates est inventore nihil sunt voluptatem dignissimos et debitis. Nihil et numquam.",
+    "votes": -5,
+    "author": "weegembump",
+    "created_at": "2020-03-03T05:25:00.000Z"
+  },
+  {
+    "comment_id": 174,
+    "article_id": 34,
+    "body": "Sit dolores similique temporibus omnis. Reiciendis animi similique. Tempore inventore aperiam. Labore dolorem sint molestiae assumenda ipsum.",
+    "votes": -2,
+    "author": "cooljmessy",
+    "created_at": "2020-09-05T23:02:00.000Z"
+  },
+  {
+    "comment_id": 181,
+    "article_id": 16,
+    "body": "Aut sint ut. Voluptatem enim saepe quasi aut ut qui quasi neque quidem. At nihil quia minus eos harum est accusantium et.",
+    "votes": -2,
+    "author": "tickle122",
+    "created_at": "2020-03-01T15:09:00.000Z"
+  },
+  {
+    "comment_id": 182,
+    "article_id": 6,
+    "body": "Voluptatem voluptas tempore soluta et rerum quia sed quas ut. Non cumque perferendis voluptate vitae est quis sit enim dolor. Et esse qui est et.",
+    "votes": -5,
+    "author": "jessjelly",
+    "created_at": "2020-08-19T18:15:00.000Z"
+  },
+  {
+    "comment_id": 198,
+    "article_id": 30,
+    "body": "Odio accusamus eius voluptatem voluptatem esse magni est in aperiam. Voluptatem quam sapiente omnis debitis ut molestiae. Eligendi qui ratione. Maiores occaecati voluptas voluptatem at repellat sint voluptatem. Ut voluptatem optio porro perspiciatis aut dicta quae qui. Minus odio suscipit tempora aspernatur sequi ut est.",
+    "votes": -3,
+    "author": "grumpy19",
+    "created_at": "2020-04-20T10:25:00.000Z"
+  },
+  {
+    "comment_id": 200,
+    "article_id": 3,
+    "body": "Fugiat aut ipsam ea commodi natus commodi officiis amet. Rerum quae error. Vel eum voluptates corrupti aperiam.",
+    "votes": -1,
+    "author": "jessjelly",
+    "created_at": "2020-05-20T06:15:00.000Z"
+  },
+  {
+    "comment_id": 202,
+    "article_id": 16,
+    "body": "Quia numquam ut fuga. Laudantium perspiciatis distinctio rerum sunt itaque non ipsum. Nihil necessitatibus voluptatem. Reiciendis nobis quae quo et mollitia soluta. Voluptates deleniti soluta ducimus natus eos enim sunt. Totam et perferendis qui reiciendis.",
+    "votes": -3,
+    "author": "happyamy2016",
+    "created_at": "2020-07-06T12:10:00.000Z"
+  },
+  {
+    "comment_id": 203,
+    "article_id": 11,
+    "body": "Fugiat voluptatibus numquam aut aut sit quae magni qui. Ipsam sed reprehenderit aliquid quibusdam. Id ducimus quisquam modi sed repellendus quia omnis aliquam et. Qui blanditiis voluptate doloremque esse qui sint deserunt voluptas. Et rerum et rerum quia repudiandae vero omnis voluptas sit. Ipsam eos fugiat omnis rem quia sequi omnis reprehenderit minus.",
+    "votes": -1,
+    "author": "tickle122",
+    "created_at": "2020-01-09T19:17:00.000Z"
+  },
+  {
+    "comment_id": 206,
+    "article_id": 31,
+    "body": "Ea cum vitae sunt. Rerum inventore voluptates dolores consequuntur recusandae esse quia velit at. Voluptatem sit voluptates temporibus. Et sunt harum ad sit ut aperiam. Omnis enim eos aspernatur. Maxime nam quasi error dolor et qui quaerat accusamus temporibus.",
+    "votes": -3,
+    "author": "cooljmessy",
+    "created_at": "2020-03-25T17:08:00.000Z"
+  },
+  {
+    "comment_id": 211,
+    "article_id": 34,
+    "body": "Molestiae ut esse a error necessitatibus doloribus eligendi nesciunt. Ea minus voluptatem quae maxime distinctio.",
+    "votes": -3,
+    "author": "cooljmessy",
+    "created_at": "2020-08-26T17:24:00.000Z"
+  },
+  {
+    "comment_id": 215,
+    "article_id": 19,
+    "body": "Maxime beatae esse veniam cum nihil. Mollitia at ducimus aliquam. Doloribus sed est. Modi ut neque et velit expedita. Aliquid in assumenda.",
+    "votes": -3,
+    "author": "grumpy19",
+    "created_at": "2020-08-21T08:16:00.000Z"
+  },
+  {
+    "comment_id": 216,
+    "article_id": 35,
+    "body": "Similique ea aperiam incidunt numquam ratione dignissimos vero reiciendis voluptatem. Saepe quas soluta ut odit. Laboriosam et aspernatur et rerum mollitia optio. Est nisi consequatur veritatis aut occaecati soluta quae beatae. Eligendi debitis ratione temporibus aperiam.",
+    "votes": -2,
+    "author": "weegembump",
+    "created_at": "2020-11-20T10:12:00.000Z"
+  },
+  {
+    "comment_id": 218,
+    "article_id": 12,
+    "body": "Iste laudantium explicabo nihil officia. Tempora voluptates amet exercitationem sed aut quo. Nostrum totam esse minus distinctio ipsum. Nisi debitis voluptatem rerum nisi qui.",
+    "votes": -3,
+    "author": "weegembump",
+    "created_at": "2020-05-14T08:24:00.000Z"
+  },
+  {
+    "comment_id": 223,
+    "article_id": 32,
+    "body": "Qui vero officia et delectus quibusdam. Eos qui inventore voluptas. Sed delectus assumenda velit. Nihil nostrum facilis beatae ut architecto sed.",
+    "votes": -3,
+    "author": "jessjelly",
+    "created_at": "2020-03-08T06:12:00.000Z"
+  },
+  {
+    "comment_id": 227,
+    "article_id": 17,
+    "body": "Et hic sint magnam error necessitatibus numquam molestias sequi. Ad id enim qui sit cum dolorem.",
+    "votes": -5,
+    "author": "weegembump",
+    "created_at": "2020-02-17T10:11:00.000Z"
+  },
+  {
+    "comment_id": 229,
+    "article_id": 4,
+    "body": "Quod asperiores aut. Rerum ipsa sed quas nobis qui recusandae neque. Est dolorem ipsam.",
+    "votes": -4,
+    "author": "jessjelly",
+    "created_at": "2020-01-21T02:22:00.000Z"
+  },
+  {
+    "comment_id": 234,
+    "article_id": 16,
+    "body": "Nostrum perspiciatis ratione illum et officia nobis sint et. Dignissimos est sed officia exercitationem. Voluptas voluptate ipsam eius rem sunt est. Accusamus nulla nam est velit. Sapiente rerum est minima eligendi accusamus voluptatem sint optio.",
+    "votes": -3,
+    "author": "weegembump",
+    "created_at": "2020-05-10T17:11:00.000Z"
+  },
+  {
+    "comment_id": 243,
+    "article_id": 36,
+    "body": "Natus quaerat non harum quae ut et quia. Id aut reiciendis.",
+    "votes": -3,
+    "author": "grumpy19",
+    "created_at": "2020-03-13T00:13:00.000Z"
+  },
+  {
+    "comment_id": 247,
+    "article_id": 13,
+    "body": "Dolor rem saepe voluptas impedit et. Corrupti qui quod commodi. Quos blanditiis placeat.",
+    "votes": -1,
+    "author": "grumpy19",
+    "created_at": "2020-05-18T22:05:00.000Z"
+  },
+  {
+    "comment_id": 252,
+    "article_id": 16,
+    "body": "Distinctio laudantium consequatur exercitationem enim magni quod est commodi. Harum consequatur est maiores ipsum accusamus impedit perferendis nobis ipsam. Adipisci excepturi itaque maiores deserunt deserunt occaecati iste. Consectetur non nostrum ex voluptatem in laborum sed ut.",
+    "votes": -3,
+    "author": "grumpy19",
+    "created_at": "2020-08-02T13:16:00.000Z"
+  },
+  {
+    "comment_id": 255,
+    "article_id": 21,
+    "body": "Voluptatem in distinctio delectus. Inventore fuga quia nemo sint quisquam reiciendis provident. Porro animi nemo qui.",
+    "votes": -1,
+    "author": "tickle122",
+    "created_at": "2020-02-20T17:18:00.000Z"
+  },
+  {
+    "comment_id": 256,
+    "article_id": 4,
+    "body": "Aut fugiat eos distinctio culpa est est maxime. Maiores nihil quos velit minus beatae. Dolore eos tenetur voluptates nemo.",
+    "votes": -5,
+    "author": "cooljmessy",
+    "created_at": "2020-08-10T12:15:00.000Z"
+  },
+  {
+    "comment_id": 258,
+    "article_id": 8,
+    "body": "Rerum occaecati provident et reprehenderit. Possimus dignissimos quo. Alias ut aut at qui. Ut quasi incidunt porro. Accusantium omnis facilis.",
+    "votes": -1,
+    "author": "jessjelly",
+    "created_at": "2020-11-10T20:16:00.000Z"
+  },
+  {
+    "comment_id": 261,
+    "article_id": 22,
+    "body": "Delectus id consequatur voluptatem ad sapiente quia optio dolor. Dolorum est ullam vitae.",
+    "votes": -5,
+    "author": "grumpy19",
+    "created_at": "2020-10-22T18:00:00.000Z"
+  },
+  {
+    "comment_id": 270,
+    "article_id": 29,
+    "body": "Repellat id vel. Ut illo ut voluptas expedita enim aperiam et cumque temporibus. Facilis non iste eos quia ut occaecati est. Soluta molestiae qui quo vel qui. Dolor labore fuga ex voluptatem ut sed similique voluptatem aspernatur. Magnam aperiam iure fuga aut nemo eius aut minima.",
+    "votes": -5,
+    "author": "tickle122",
+    "created_at": "2020-03-17T17:26:00.000Z"
+  },
+  {
+    "comment_id": 273,
+    "article_id": 21,
+    "body": "Ullam ut consequatur. Vel et harum sed quo. Aliquid rem consequatur est. Esse deleniti voluptatem temporibus. Deleniti maiores officiis mollitia omnis exercitationem dicta cum quia. Earum voluptates qui iusto ipsa magni id.",
+    "votes": -5,
+    "author": "weegembump",
+    "created_at": "2020-07-26T15:04:00.000Z"
+  },
+  {
+    "comment_id": 274,
+    "article_id": 35,
+    "body": "Quod inventore aut consequuntur rerum aperiam. Laborum nihil ut optio fugit.",
+    "votes": -3,
+    "author": "happyamy2016",
+    "created_at": "2020-08-25T12:26:00.000Z"
+  },
+  {
+    "comment_id": 275,
+    "article_id": 23,
+    "body": "Nulla similique ullam excepturi tempore. Voluptatem eum vel voluptatem dolores suscipit similique labore aliquam dolores. Est ex eum at voluptate repellat assumenda. Eos asperiores dolor aperiam.",
+    "votes": -4,
+    "author": "jessjelly",
+    "created_at": "2020-07-21T23:23:00.000Z"
+  },
+  {
+    "comment_id": 283,
+    "article_id": 32,
+    "body": "Ratione tempore et natus incidunt quibusdam minima. Voluptatem quae quae eos reiciendis et quia saepe enim et. Esse sapiente totam ullam nam. Provident repellat velit enim excepturi asperiores qui nostrum similique dicta. Labore repellendus quae ut voluptas voluptatibus. Voluptatibus voluptatum sed nemo harum ad harum repellendus ad.",
+    "votes": -4,
+    "author": "happyamy2016",
+    "created_at": "2020-01-06T15:17:00.000Z"
+  },
+  {
+    "comment_id": 290,
+    "article_id": 28,
+    "body": "Sunt omnis pariatur dignissimos quibusdam dolore ut non velit autem. Omnis voluptatibus qui aut sunt ut unde. Ut eaque excepturi numquam quis occaecati. Repellat esse voluptas velit eveniet ut pariatur natus. Velit voluptas nostrum quia dignissimos quisquam incidunt.",
+    "votes": -3,
+    "author": "jessjelly",
+    "created_at": "2020-09-01T18:00:00.000Z"
+  },
+  {
+    "comment_id": 300,
+    "article_id": 22,
+    "body": "Quia nemo est. Maiores animi architecto ad nihil sapiente. Odio in maxime nam assumenda tempora et nisi. Impedit quidem cum neque libero sequi et et impedit. Dignissimos ut molestiae laborum rerum error distinctio quasi hic consectetur. Odio vel qui necessitatibus perspiciatis ipsum quod excepturi saepe.",
+    "votes": -1,
+    "author": "jessjelly",
+    "created_at": "2020-02-01T03:22:00.000Z"
+  }
+]
