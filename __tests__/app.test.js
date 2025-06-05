@@ -636,3 +636,68 @@ describe('GET /api/users/:username', () => {
           });
   });
 });
+
+describe('PATCH /api/comments/:comment_id', () => {
+  test('200: responds with updated comment when incrementing votes', () => {
+    const updateVotes = { inc_votes: 1 };
+    
+    return request(app)
+      .patch('/api/comments/1')
+      .send(updateVotes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comment).toMatchObject({
+          comment_id: 1,
+          body: expect.any(String),
+          votes: 17, // 16 + 1
+          author: expect.any(String),
+          article_id: expect.any(Number),
+          created_at: expect.any(String)
+        });
+      });
+  });
+
+  test('200: responds with updated comment when decrementing votes', () => {
+    const updateVotes = { inc_votes: -10 };
+    
+    return request(app)
+      .patch('/api/comments/1')
+      .send(updateVotes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comment.votes).toBe(6);
+      });
+  });
+
+  test('404: responds with error when comment does not exist', () => {
+    const updateVotes = { inc_votes: 1 };
+    
+    return request(app)
+      .patch('/api/comments/999')
+      .send(updateVotes)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Comment not found');
+      });
+  });
+
+  test('400: responds with error when inc_votes is missing', () => {
+    return request(app)
+      .patch('/api/comments/1')
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Bad request');
+      });
+  });
+
+  test('400: responds with error when inc_votes is not a number', () => {
+    return request(app)
+      .patch('/api/comments/1')
+      .send({ inc_votes: 'not-a-number' })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Bad request');
+      });
+  });
+});

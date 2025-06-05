@@ -1,4 +1,9 @@
-const { selectCommentsByArticleId, insertComment, removeCommentById } = require("../models/comments.models");
+const { 
+    selectCommentsByArticleId,
+    insertComment,
+    removeCommentById,
+    updateCommentById
+} = require("../models/comments.models");
 
 exports.getCommentsByArticleId = (req, res, next) => {
     const { article_id } = req.params;
@@ -29,4 +34,19 @@ exports.deleteCommentById = (req, res, next) => {
             res.status(204).send();
         })
         .catch(next);
+};
+
+exports.patchCommentById = (req, res, next) => {
+    const { comment_id } = req.params;
+    const { inc_votes } = req.body;
+
+    if (inc_votes === undefined) {
+        return next({ status: 400, msg: 'Bad request' });
+    }
+
+    updateCommentById(comment_id, inc_votes)
+    .then((comment) => {
+        res.status(200).send({ comment });
+    })
+    .catch(next);
 };
