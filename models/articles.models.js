@@ -1,6 +1,7 @@
-const db = require("../db/connection")
+const db = require("../db/connection");
 
-exports.selectArticles = (sort_by = 'created_at', order = 'desc', topic) => {
+exports.selectArticles = async (sort_by = 'created_at', order = 'desc', topic, limit = 10, p = 1) => {
+    // Validation
     const validSortBy = ['title', 'topic', 'author', 'created_at', 'votes', 'comment_count'];
     const validOrder = ['asc', 'desc'];
 
@@ -12,52 +13,67 @@ exports.selectArticles = (sort_by = 'created_at', order = 'desc', topic) => {
         return Promise.reject({ status: 400, msg: 'Bad request' });
     }
 
-    let queryStr = `
-        SELECT 
-            a.author, a.title, a.article_id,
-            a.topic, a.created_at, a.votes,
-            a.article_img_url, 
-            COUNT(comments.comment_id) AS comment_count
-        FROM articles a
-        LEFT JOIN comments ON a.article_id = comments.article_id`;
+    // Convert and validate pagination
+    const limitNum = Number(limit);
+    const pageNum = Number(p);
+
+    if (isNaN(limitNum) || isNaN(pageNum) || limitNum < 1 || pageNum < 1) {
+        return Promise.reject({ status: 400, msg: 'Bad request' });
+    }
+
+    const offset = (pageNum - 1) * limitNum;
+
+    // Build queries
+    let countQuery = `SELECT COUNT(*) FROM articles`;
+    let articlesQuery = `
+      SELECT 
+        articles.author, articles.title, articles.article_id,
+        articles.topic, articles.created_at, articles.votes,
+        articles.article_img_url, 
+        COUNT(comments.comment_id) AS comment_count
+      FROM articles
+      LEFT JOIN comments ON articles.article_id = comments.article_id`;
 
     const queryValues = [];
 
+    // Handle topic filter
     if (topic) {
-        // First check if topic exists
-        return db.query('SELECT * FROM topics WHERE slug = $1;', [topic])
-            .then(({ rows }) => {
-                if (rows.length === 0) {
-                    return Promise.reject({ status: 404, msg: 'Topic not found' });
-                }
+        const topicCheck = await db.query('SELECT * FROM topics WHERE slug = $1;', [topic]);
+        if (topicCheck.rows.length === 0) {
+            return Promise.reject({ status: 404, msg: 'Topic not found' });
+        }
 
-                queryStr += ` WHERE a.topic = $1`;
-                queryValues.push(topic);
-
-                queryStr += ` GROUP BY a.article_id ORDER BY ${sort_by} ${order.toUpperCase()};`;
-
-                return db.query(queryStr, queryValues);
-            })
-            .then(({ rows }) => {
-                return rows.map((article) => {
-                    return {
-                        ...article,
-                        comment_count: +article.comment_count
-                    };
-                });
-            });
+        countQuery += ` WHERE topic = $1`;
+        articlesQuery += ` WHERE articles.topic = $1`;
+        queryValues.push(topic);
     }
 
-    queryStr += ` GROUP BY a.article_id ORDER BY ${sort_by} ${order.toUpperCase()};`;
+    // Get total count
+    const countResult = await db.query(countQuery, queryValues);
+    const totalCount = parseInt(countResult.rows[0].count);
 
-    return db.query(queryStr, queryValues).then(({ rows }) => {
-        return rows.map((article) => {
-            return {
-                ...article,
-                comment_count: +article.comment_count
-            };
-        });
-    });
+    // GROUP BY
+    articlesQuery += ` GROUP BY articles.article_id`;
+
+    // Handle ORDER BY
+    if (sort_by === 'comment_count') {
+        articlesQuery += ` ORDER BY comment_count ${order.toUpperCase()}`;
+    } else {
+        articlesQuery += ` ORDER BY articles.${sort_by} ${order.toUpperCase()}`;
+    }
+
+    // pagination
+    articlesQuery += ` LIMIT $${queryValues.length + 1} OFFSET $${queryValues.length + 2}`;
+    queryValues.push(limitNum, offset);
+
+    // Get articles
+    const articlesResult = await db.query(articlesQuery, queryValues);
+    const articles = articlesResult.rows.map((article) => ({
+        ...article,
+        comment_count: +article.comment_count
+    }));
+
+    return { articles, total_count: totalCount };
 };
 
 exports.selectArticleById = (article_id) => {
@@ -113,8 +129,8 @@ exports.insertArticle = (author, title, body, topic, article_img_url) => {
         VALUES ($1, $2, $3, $4, $5)
         RETURNING *;
       `, [author, title, body, topic, imageUrl])
-      .then(({ rows }) => {
-        const article = rows[0];
-        return { ...article, comment_count: 0 };
-      });
+        .then(({ rows }) => {
+            const article = rows[0];
+            return { ...article, comment_count: 0 };
+        });
 }

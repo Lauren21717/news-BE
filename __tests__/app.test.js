@@ -60,12 +60,25 @@ describe('GET /api/topics', () => {
 
 describe('GET /api/articles', () => {
   describe('Basic functionality', () => {
-    test('200: responds with correct data structure and default sorting', () => {
+    test('200: responds with correct data structure including pagination', () => {
       return request(app)
         .get('/api/articles')
         .expect(200)
         .then(({ body }) => {
-          expect(body.articles).toHaveLength(13);
+          expect(body).toHaveProperty('articles');
+          expect(body).toHaveProperty('total_count');
+          expect(Array.isArray(body.articles)).toBe(true);
+          expect(typeof body.total_count).toBe('number');
+        });
+    });
+
+    test('200: defaults to 10 articles with correct sorting', () => {
+      return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toHaveLength(10);
+          expect(body.total_count).toBe(13);
           expect(body.articles).toBeSortedBy('created_at', { descending: true });
         });
     });
@@ -92,13 +105,53 @@ describe('GET /api/articles', () => {
     });
   });
 
+  describe('Pagination', () => {
+    test('200: respects custom limit', () => {
+      return request(app)
+        .get('/api/articles?limit=5')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toHaveLength(5);
+          expect(body.total_count).toBe(13);
+        });
+    });
+
+    test('200: respects page parameter', () => {
+      return request(app)
+        .get('/api/articles?limit=5&p=2')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toHaveLength(5);
+          expect(body.total_count).toBe(13);
+        });
+    });
+
+    test('400: responds with error for invalid limit', () => {
+      return request(app)
+        .get('/api/articles?limit=invalid')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Bad request');
+        });
+    });
+
+    test('400: responds with error for invalid page', () => {
+      return request(app)
+        .get('/api/articles?p=invalid')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Bad request');
+        });
+    });
+  });
+
   describe('Sorting queries', () => {
     test('200: can be sorted by different columns and orders', () => {
       const sortTests = [
-        { query: '?sort_by=title&order=asc', sortBy: 'title', desc: false },
-        { query: '?sort_by=author&order=desc', sortBy: 'author', desc: true },
-        { query: '?sort_by=votes', sortBy: 'votes', desc: true },
-        { query: '?sort_by=comment_count&order=asc', sortBy: 'comment_count', desc: false }
+        { query: '?sort_by=title&order=asc&limit=13', sortBy: 'title', desc: false },
+        { query: '?sort_by=author&order=desc&limit=13', sortBy: 'author', desc: true },
+        { query: '?sort_by=votes&limit=13', sortBy: 'votes', desc: true },
+        { query: '?sort_by=comment_count&order=asc&limit=13', sortBy: 'comment_count', desc: false }
       ];
 
       return Promise.all(
@@ -108,9 +161,21 @@ describe('GET /api/articles', () => {
             .expect(200)
             .then(({ body }) => {
               expect(body.articles).toBeSortedBy(sortBy, { descending: desc });
+              expect(body.total_count).toBe(13);
             })
         )
       );
+    });
+
+    test('200: pagination works with sorting', () => {
+      return request(app)
+        .get('/api/articles?sort_by=votes&order=asc&limit=3')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toHaveLength(3);
+          expect(body.articles).toBeSortedBy('votes', { descending: false });
+          expect(body.total_count).toBe(13);
+        });
     });
 
     test('400: responds with error for invalid sorting parameters', () => {
@@ -132,13 +197,27 @@ describe('GET /api/articles', () => {
   });
 
   describe('Topic filtering', () => {
-    test('200: filters articles by topic', () => {
+    test('200: filters articles by topic with default pagination', () => {
       return request(app)
         .get('/api/articles?topic=mitch')
         .expect(200)
         .then(({ body }) => {
-          expect(body.articles).toHaveLength(12);
+          expect(body.articles).toHaveLength(10); // Default limit
+          expect(body.total_count).toBe(12); // Total mitch articles
           body.articles.forEach((article) => {
+            expect(article.topic).toBe('mitch');
+          });
+        });
+    });
+
+    test('200: pagination works with topic filter', () => {
+      return request(app)
+        .get('/api/articles?topic=mitch&limit=5')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toHaveLength(5);
+          expect(body.total_count).toBe(12);
+          body.articles.forEach(article => {
             expect(article.topic).toBe('mitch');
           });
         });
@@ -150,15 +229,17 @@ describe('GET /api/articles', () => {
         .expect(200)
         .then(({ body }) => {
           expect(body.articles).toEqual([]);
+          expect(body.total_count).toBe(0);
         });
     });
 
     test('200: combines topic filtering with sorting', () => {
       return request(app)
-        .get('/api/articles?topic=mitch&sort_by=votes&order=asc')
+        .get('/api/articles?topic=mitch&sort_by=votes&order=asc&limit=12')
         .expect(200)
         .then(({ body }) => {
           expect(body.articles).toBeSortedBy('votes', { descending: false });
+          expect(body.total_count).toBe(12);
           body.articles.forEach((article) => {
             expect(article.topic).toBe('mitch');
           });
