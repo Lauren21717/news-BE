@@ -558,3 +558,81 @@ describe('DELETE /api/comments/:comment_id', () => {
           });
   });
 });
+
+describe('GET /api/users/:username', () => {
+  test('200: responds with status 200', () => {
+      return request(app)
+          .get('/api/users/butter_bridge')
+          .expect(200);
+  });
+
+  test('200: responds with a single user object', () => {
+      return request(app)
+          .get('/api/users/butter_bridge')
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.user).toBeInstanceOf(Object);
+              expect(Array.isArray(body.user)).toBe(false);
+          });
+  });
+
+  test('200: user object has correct properties', () => {
+      return request(app)
+          .get('/api/users/butter_bridge')
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.user).toMatchObject({
+                  username: expect.any(String),
+                  name: expect.any(String),
+                  avatar_url: expect.any(String)
+              });
+          });
+  });
+
+  test('200: responds with correct user data for butter_bridge', () => {
+      return request(app)
+          .get('/api/users/butter_bridge')
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.user).toMatchObject({
+                  username: 'butter_bridge',
+                  name: expect.any(String),
+                  avatar_url: expect.any(String)
+              });
+          });
+  });
+
+  test('200: responds with correct user data for different user', () => {
+      return request(app)
+          .get('/api/users/icellusedkars')
+          .expect(200)
+          .then(({ body }) => {
+              expect(body.user).toMatchObject({
+                  username: 'icellusedkars',
+                  name: expect.any(String),
+                  avatar_url: expect.any(String)
+              });
+          });
+  });
+
+  test('404: responds with error when username does not exist', () => {
+      return request(app)
+          .get('/api/users/nonexistent_user')
+          .expect(404)
+          .then(({ body }) => {
+              expect(body.msg).toBe('User not found');
+          });
+  });
+
+  test('404: responds with appropriate error message format', () => {
+      return request(app)
+          .get('/api/users/nonexistent_user')
+          .expect(404)
+          .then(({ body }) => {
+              expect(body).toMatchObject({
+                  msg: expect.any(String)
+              });
+              expect(body).not.toHaveProperty('user');
+          });
+  });
+});
