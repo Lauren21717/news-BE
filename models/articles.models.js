@@ -30,12 +30,12 @@ exports.selectArticles = (sort_by = 'created_at', order = 'desc', topic) => {
                 if (rows.length === 0) {
                     return Promise.reject({ status: 404, msg: 'Topic not found' });
                 }
-                
+
                 queryStr += ` WHERE a.topic = $1`;
                 queryValues.push(topic);
-                
+
                 queryStr += ` GROUP BY a.article_id ORDER BY ${sort_by} ${order.toUpperCase()};`;
-                
+
                 return db.query(queryStr, queryValues);
             })
             .then(({ rows }) => {
@@ -99,3 +99,22 @@ exports.updateArticleById = (article_id, inc_votes) => {
             return rows[0];
         });
 };
+
+exports.insertArticle = (author, title, body, topic, article_img_url) => {
+    if (!author || !title || !body || !topic) {
+        return Promise.reject({ status: 400, msg: 'Bad request' });
+    }
+
+    const defaultImageUrl = 'https://images.pexels.com/photos/11035481/pexels-photo-11035481.jpeg?w=700&h=700';
+    const imageUrl = article_img_url || defaultImageUrl;
+
+    return db.query(`
+        INSERT INTO articles (author, title, body, topic, article_img_url)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *;
+      `, [author, title, body, topic, imageUrl])
+      .then(({ rows }) => {
+        const article = rows[0];
+        return { ...article, comment_count: 0 };
+      });
+}
