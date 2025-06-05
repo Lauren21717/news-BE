@@ -335,73 +335,139 @@ describe('GET /api/articles/:article_id', () => {
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
-  test('200: responds with status 200 for article with comments', () => {
+  describe('Basic functionality', () => {
+    test('200: responds with correct data structure including pagination', () => {
       return request(app)
-          .get('/api/articles/1/comments')
-          .expect(200);
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toHaveProperty('comments');
+          expect(body).toHaveProperty('total_count');
+          expect(Array.isArray(body.comments)).toBe(true);
+          expect(typeof body.total_count).toBe('number');
+        });
+    });
+
+    test('200: defaults to 10 comments with correct sorting', () => {
+      return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).toHaveLength(10);
+          expect(body.total_count).toBe(11);
+          expect(body.comments).toBeSortedBy('created_at', { descending: true });
+        });
+    });
+
+    test('200: each comment has correct properties', () => {
+      return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({ body }) => {
+          body.comments.forEach((comment) => {
+            expect(comment).toMatchObject({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              article_id: 1
+            });
+          });
+        });
+    });
   });
 
-  test('200: responds with correct number of comments for article 1', () => {
+  describe('Pagination', () => {
+    test('200: respects custom limit', () => {
       return request(app)
-          .get('/api/articles/1/comments')
-          .expect(200)
-          .then(({ body }) => {
-              expect(body.comments).toHaveLength(11);
-          });
+        .get('/api/articles/1/comments?limit=5')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).toHaveLength(5);
+          expect(body.total_count).toBe(11);
+        });
+    });
+
+    test('200: respects page parameter', () => {
+      return request(app)
+        .get('/api/articles/1/comments?limit=5&p=2')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).toHaveLength(5);
+          expect(body.total_count).toBe(11);
+        });
+    });
+
+    test('400: responds with error for invalid limit', () => {
+      return request(app)
+        .get('/api/articles/1/comments?limit=invalid')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Bad request');
+        });
+    });
+
+    test('400: responds with error for invalid page', () => {
+      return request(app)
+        .get('/api/articles/1/comments?p=invalid')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Bad request');
+        });
+    });
   });
 
-  test('200: comments are sorted by created_at in descending order', () => {
+  describe('Edge cases', () => {
+    test('200: handles articles with no comments', () => {
       return request(app)
-          .get('/api/articles/1/comments')
-          .expect(200)
-          .then(({ body }) => {
-              expect(body.comments).toBeSortedBy('created_at', { descending: true });
-          });
+        .get('/api/articles/2/comments')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).toEqual([]);
+          expect(body.total_count).toBe(0);
+        });
+    });
+
+    test('200: returns all comments when limit exceeds total', () => {
+      return request(app)
+        .get('/api/articles/1/comments?limit=20')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).toHaveLength(11);
+          expect(body.total_count).toBe(11);
+        });
+    });
+
+    test('200: returns empty array when page exceeds available comments', () => {
+      return request(app)
+        .get('/api/articles/1/comments?limit=5&p=999')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).toEqual([]);
+          expect(body.total_count).toBe(11);
+        });
+    });
   });
 
-  test('200: each comment has the correct properties', () => {
+  describe('Error handling', () => {
+    test('404: responds with error when article does not exist', () => {
       return request(app)
-          .get('/api/articles/1/comments')
-          .expect(200)
-          .then(({ body }) => {
-              body.comments.forEach((comment) => {
-                  expect(comment).toMatchObject({
-                      comment_id: expect.any(Number),
-                      votes: expect.any(Number),
-                      created_at: expect.any(String),
-                      author: expect.any(String),
-                      body: expect.any(String),
-                      article_id: 1
-                  });
-              });
-          });
-  });
+        .get('/api/articles/999/comments')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Article not found');
+        });
+    });
 
-  test('200: responds with empty array when article exists but has no comments', () => {
+    test('400: responds with error for invalid article_id', () => {
       return request(app)
-          .get('/api/articles/2/comments')
-          .expect(200)
-          .then(({ body }) => {
-              expect(body.comments).toEqual([]);
-          });
-  });
-
-  test('404: responds with error when article does not exist', () => {
-      return request(app)
-          .get('/api/articles/999/comments')
-          .expect(404)
-          .then(({ body }) => {
-              expect(body.msg).toBe('Article not found');
-          });
-  });
-
-  test('400: responds with error when given invalid article_id', () => {
-      return request(app)
-          .get('/api/articles/not-a-number/comments')
-          .expect(400)
-          .then(({ body }) => {
-              expect(body.msg).toBe('Bad request');
-          });
+        .get('/api/articles/not-a-number/comments')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Bad request');
+        });
+    });
   });
 });
 
