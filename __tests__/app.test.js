@@ -701,3 +701,150 @@ describe('PATCH /api/comments/:comment_id', () => {
       });
   });
 });
+
+describe('POST /api/articles', () => {
+  test('201: responds with status 201', () => {
+    const newArticle = {
+      author: 'butter_bridge',
+      title: 'Test Article',
+      body: 'This is a test article body',
+      topic: 'mitch'
+    };
+    
+    return request(app)
+      .post('/api/articles')
+      .send(newArticle)
+      .expect(201);
+  });
+
+  test('201: responds with an article object', () => {
+    const newArticle = {
+      author: 'butter_bridge',
+      title: 'Test Article',
+      body: 'This is a test article body',
+      topic: 'mitch'
+    };
+    
+    return request(app)
+      .post('/api/articles')
+      .send(newArticle)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body).toHaveProperty('article');
+        expect(body.article).toBeInstanceOf(Object);
+        expect(Array.isArray(body.article)).toBe(false);
+      });
+  });
+
+  test('201: article has correct structure properties', () => {
+    const newArticle = {
+      author: 'butter_bridge',
+      title: 'Test Article',
+      body: 'This is a test article body',
+      topic: 'mitch'
+    };
+    
+    return request(app)
+      .post('/api/articles')
+      .send(newArticle)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.article).toMatchObject({
+          article_id: expect.any(Number),
+          author: expect.any(String),
+          title: expect.any(String),
+          body: expect.any(String),
+          topic: expect.any(String),
+          article_img_url: expect.any(String),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          comment_count: expect.any(Number)
+        });
+      });
+  });
+
+
+  test('201: uses default image URL when article_img_url not provided', () => {
+    const newArticle = {
+      author: 'butter_bridge',
+      title: 'Test Article',
+      body: 'This is a test article body',
+      topic: 'mitch'
+    };
+    
+    return request(app)
+      .post('/api/articles')
+      .send(newArticle)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.article).toMatchObject({ article_img_url: expect.any(String), })
+      });
+  });
+
+  test('201: uses provided image URL when article_img_url is provided', () => {
+    const newArticle = {
+      author: 'butter_bridge',
+      title: 'Test Article',
+      body: 'This is a test article body',
+      topic: 'mitch',
+      article_img_url: 'https://example.com/custom-image.jpg'
+    };
+    
+    return request(app)
+      .post('/api/articles')
+      .send(newArticle)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.article.article_img_url).toBe('https://example.com/custom-image.jpg');
+      });
+  });
+
+  test('400: responds with error when required fields are missing', () => {
+    const newArticle = {
+      author: 'butter_bridge',
+      title: 'Test Article'
+    };
+    
+    return request(app)
+      .post('/api/articles')
+      .send(newArticle)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Bad request');
+      });
+  });
+
+  test('404: responds with error when author does not exist', () => {
+    const newArticle = {
+      author: 'nonexistent_user',
+      title: 'Test Article',
+      body: 'This is a test article body',
+      topic: 'mitch'
+    };
+    
+    return request(app)
+      .post('/api/articles')
+      .send(newArticle)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Not found');
+      });
+  });
+
+  test('404: responds with error when topic does not exist', () => {
+    const newArticle = {
+      author: 'butter_bridge',
+      title: 'Test Article',
+      body: 'This is a test article body',
+      topic: 'nonexistent_topic'
+    };
+    
+    return request(app)
+      .post('/api/articles')
+      .send(newArticle)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Not found');
+      });
+  });
+});
