@@ -1,30 +1,14 @@
 const express = require('express');
-const { getApi } = require('./controllers/api.controllers');
-const { getTopics } = require('./controllers/topics.controllers');
-const { getArticles, getArticleById, patchArticleById } = require('./controllers/articles.controllers');
-const { getUsers } = require('./controllers/users.controllers');
-const { getCommentsByArticleId, postComment, deleteCommentById } = require('./controllers/comments.controllers');
+const cors = require('cors');
+const apiRouter = require('./routers/api.router');
 
 const app = express();
 
-app.use(express.json());
+app.use(cors());
+app.use(express.json())
 
-// get routes
-app.get('/api', getApi);
-app.get('/api/topics', getTopics);
-app.get('/api/articles', getArticles);
-app.get('/api/articles/:article_id', getArticleById);
-app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
-app.get('/api/users', getUsers);
-
-// patch routes
-app.patch('/api/articles/:article_id', patchArticleById);
-
-// post routes
-app.post('/api/articles/:article_id/comments', postComment);
-
-// delete routes
-app.delete('/api/comments/:comment_id', deleteCommentById);
+// all routes
+app.use('/api', apiRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
