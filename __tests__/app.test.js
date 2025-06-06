@@ -345,7 +345,7 @@ describe('GET /api/articles/:article_id', () => {
 
   test('200: returns empty array when no reactions', () => {
     return request(app)
-      .get('/api/articles/2')
+      .get('/api/articles/6')
       .expect(200)
       .then(({ body }) => {
         expect(body.article.emoji_reactions).toEqual([]);
@@ -1356,5 +1356,107 @@ describe('POST /api/users/:username/topics', () => {
           .send(followTopic)
           .expect(400);
       });
+  });
+});
+
+describe('POST /api/articles/:article_id/reactions', () => {
+  describe('Basic functionality', () => {
+    test('201: responds with status 201', () => {
+      const reaction = { emoji_name: 'thumbs_up', username: 'butter_bridge' };
+      
+      return request(app)
+        .post('/api/articles/1/reactions')
+        .send(reaction)
+        .expect(201);
+    });
+
+    test('201: responds with created reaction', () => {
+      const reaction = { emoji_name: 'heart', username: 'icellusedkars' };
+      
+      return request(app)
+        .post('/api/articles/1/reactions')
+        .send(reaction)
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.reaction).toMatchObject({
+            emoji_id: expect.any(Number),
+            username: 'icellusedkars',
+            article_id: 1,
+            created_at: expect.any(String)
+          });
+        });
+    });
+
+    test('201: reaction appears in article emoji reactions', () => {
+      const reaction = { emoji_name: 'laughing', username: 'rogersop' };
+      
+      return request(app)
+        .post('/api/articles/5/reactions')
+        .send(reaction)
+        .expect(201)
+        .then(() => {
+          return request(app).get('/api/articles/5');
+        })
+        .then(({ body }) => {
+          const laughReaction = body.article.emoji_reactions.find(r => r.emoji_name === 'laughing');
+          expect(laughReaction).toBeDefined();
+          expect(laughReaction.count).toBeGreaterThan(0);
+        });
+    });
+  });
+
+  describe('Error handling', () => {
+    test('400: responds with error when emoji_name is missing', () => {
+      return request(app)
+        .post('/api/articles/1/reactions')
+        .send({ username: 'butter_bridge' })
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Bad request');
+        });
+    });
+
+    test('404: responds with error when article does not exist', () => {
+      const reaction = { emoji_name: 'thumbs_up', username: 'butter_bridge' };
+      
+      return request(app)
+        .post('/api/articles/999/reactions')
+        .send(reaction)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Article not found');
+        });
+    });
+
+    test('404: responds with error when emoji does not exist', () => {
+      const reaction = { emoji_name: 'nonexistent', username: 'butter_bridge' };
+      
+      return request(app)
+        .post('/api/articles/1/reactions')
+        .send(reaction)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Emoji not found');
+        });
+    });
+
+    test('400: responds with error when user already reacted with same emoji', () => {
+      const reaction = { emoji_name: 'thumbs_up', username: 'butter_bridge' };
+      
+      // Add reaction first time
+      return request(app)
+        .post('/api/articles/1/reactions')
+        .send(reaction)
+        .expect(201)
+        .then(() => {
+          // Try to add same reaction again
+          return request(app)
+            .post('/api/articles/1/reactions')
+            .send(reaction);
+        })
+        .then((response) => {
+          expect(response.status).toBe(400);
+        });
+    });
   });
 });
