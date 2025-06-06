@@ -5,49 +5,50 @@ const {
     updateCommentById
 } = require("../models/comments.models");
 
-exports.getCommentsByArticleId = (req, res, next) => {
-    const { article_id } = req.params;
-    const { limit, p } = req.query;
-
-    selectCommentsByArticleId(article_id, limit, p)
-        .then(({ comments, total_count }) => {
-            res.status(200).send({ comments, total_count });
-        })
-        .catch(next);
-};
-
-exports.postComment = (req, res, next) => {
-    const { article_id } = req.params;
-    const { username, body } = req.body;
-
-    insertComment(article_id, username, body)
-        .then((comment) => {
-            res.status(201).send({ comment });
-        })
-        .catch(next);
-};
-
-exports.deleteCommentById = (req, res, next) => {
-    const { comment_id } = req.params;
-
-    removeCommentById(comment_id)
-        .then(() => {
-            res.status(204).send();
-        })
-        .catch(next);
-};
-
-exports.patchCommentById = (req, res, next) => {
-    const { comment_id } = req.params;
-    const { inc_votes } = req.body;
-
-    if (inc_votes === undefined) {
-        return next({ status: 400, msg: 'Bad request' });
+exports.getCommentsByArticleId = async (req, res, next) => {
+    try {
+        const { article_id } = req.params;
+        const { limit, p } = req.query;
+        const { comments, total_count } = await selectCommentsByArticleId(article_id, limit, p);
+        res.status(200).send({ comments, total_count });
+    } catch (error) {
+        next(error);
     }
+};
 
-    updateCommentById(comment_id, inc_votes)
-    .then((comment) => {
+exports.postComment = async (req, res, next) => {
+    try {
+        const { article_id } = req.params;
+        const { username, body } = req.body;
+        const comment = await insertComment(article_id, username, body);
+        res.status(201).send({ comment });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.deleteCommentById = async (req, res, next) => {
+    try {
+        const { comment_id } = req.params;
+        await removeCommentById(comment_id);
+        res.status(204).send();
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.patchCommentById = async (req, res, next) => {
+    try {
+        const { comment_id } = req.params;
+        const { inc_votes } = req.body;
+
+        if (inc_votes === undefined) {
+            return next({ status: 400, msg: 'Bad request' });
+        }
+
+        const comment = await updateCommentById(comment_id, inc_votes);
         res.status(200).send({ comment });
-    })
-    .catch(next);
+    } catch (error) {
+        next(error);
+    }
 };

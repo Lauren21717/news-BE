@@ -6,57 +6,58 @@ const {
     removeArticleById
 } = require("../models/articles.models")
 
-exports.getArticles = (req, res, next) => {
-    const { sort_by, order, topic, limit, p } = req.query;
-
-    selectArticles(sort_by, order, topic, limit, p)
-        .then(({ articles, total_count }) => {
-            res.status(200).send({ articles, total_count });
-        })
-        .catch(next);
-};
-
-exports.getArticleById = (req, res, next) => {
-    const { article_id } = req.params;
-
-    selectArticleById(article_id)
-        .then((article) => {
-            res.status(200).send({ article });
-        })
-        .catch(next);
-};
-
-exports.patchArticleById = (req, res, next) => {
-    const { article_id } = req.params;
-    const { inc_votes } = req.body;
-
-    if (inc_votes === undefined) {
-        return next({ status: 400, msg: 'Bad request' });
+exports.getArticles = async (req, res, next) => {
+    try {
+        const { sort_by, order, topic, limit, p } = req.query;
+        const { articles, total_count } = await selectArticles(sort_by, order, topic, limit, p);
+        res.status(200).send({ articles, total_count });
+    } catch (error) {
+        next(error);
     }
-
-    updateArticleById(article_id, inc_votes)
-        .then((article) => {
-            res.status(200).send({ article });
-        })
-        .catch(next);
 };
 
-exports.postArticle = (req, res, next) => {
-    const { author, title, body, topic, article_img_url } = req.body;
-
-    insertArticle(author, title, body, topic, article_img_url)
-        .then((article) => {
-            res.status(201).send({ article });
-        })
-        .catch(next);
+exports.getArticleById = async (req, res, next) => {
+    try {
+        const { article_id } = req.params;
+        const article = await selectArticleById(article_id);
+        res.status(200).send({ article });
+    } catch (error) {
+        next(error);
+    }
 };
 
-exports.deleteArticleById = (req, res, next) => {
-    const { article_id } = req.params;
-    
-    removeArticleById(article_id)
-      .then(() => {
+exports.patchArticleById = async (req, res, next) => {
+    try {
+        const { article_id } = req.params;
+        const { inc_votes } = req.body;
+
+        if (inc_votes === undefined) {
+            return next({ status: 400, msg: 'Bad request' });
+        }
+
+        const article = await updateArticleById(article_id, inc_votes);
+        res.status(200).send({ article });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.postArticle = async (req, res, next) => {
+    try {
+        const { author, title, body, topic, article_img_url } = req.body;
+        const article = await insertArticle(author, title, body, topic, article_img_url);
+        res.status(201).send({ article });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.deleteArticleById = async (req, res, next) => {
+    try {
+        const { article_id } = req.params;
+        await removeArticleById(article_id);
         res.status(204).send();
-      })
-      .catch(next);
-  };
+    } catch (error) {
+        next(error);
+    }
+};
