@@ -315,6 +315,43 @@ describe('GET /api/articles/:article_id', () => {
       });
   });
 
+  test('200: article includes emoji_reactions property', () => {
+    return request(app)
+      .get('/api/articles/1')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toHaveProperty('emoji_reactions');
+        expect(Array.isArray(body.article.emoji_reactions)).toBe(true);
+      });
+  });
+
+  test('200: emoji reactions have correct structure', () => {
+    return request(app)
+      .get('/api/articles/1')
+      .expect(200)
+      .then(({ body }) => {
+        if (body.article.emoji_reactions.length > 0) {
+          body.article.emoji_reactions.forEach(reaction => {
+            expect(reaction).toMatchObject({
+              emoji: expect.any(String),
+              emoji_name: expect.any(String),
+              count: expect.any(Number)
+            });
+            expect(reaction.count).toBeGreaterThan(0);
+          });
+        }
+      });
+  });
+
+  test('200: returns empty array when no reactions', () => {
+    return request(app)
+      .get('/api/articles/2')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article.emoji_reactions).toEqual([]);
+      });
+  });
+
   test('404: responds with error when article does not exist', () => {
     return request(app)
       .get('/api/articles/999')
@@ -524,7 +561,6 @@ describe('POST /api/articles/:article_id/comments', () => {
   test('400: responds with error when missing required fields', () => {
     const newComment = {
       username: 'butter_bridge'
-      // missing body
     };
 
     return request(app)
@@ -759,6 +795,38 @@ describe('GET /api/users/:username', () => {
           name: expect.any(String),
           avatar_url: expect.any(String)
         });
+      });
+  });
+
+  test('200: user object includes followed_topics property', () => {
+    return request(app)
+      .get('/api/users/butter_bridge')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.user).toHaveProperty('followed_topics');
+        expect(Array.isArray(body.user.followed_topics)).toBe(true);
+      });
+  });
+
+  test('200: followed_topics contains correct data structure', () => {
+    return request(app)
+      .get('/api/users/butter_bridge')
+      .expect(200)
+      .then(({ body }) => {
+        if (body.user.followed_topics.length > 0) {
+          body.user.followed_topics.forEach(topic => {
+            expect(typeof topic).toBe('string');
+          });
+        }
+      });
+  });
+
+  test('200: works for user with no followed topics', () => {
+    return request(app)
+      .get('/api/users/lurker')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.user.followed_topics).toEqual([]);
       });
   });
 
@@ -1144,7 +1212,7 @@ describe('DELETE /api/articles/:article_id', () => {
 
     test('204: total article count decreases', () => {
       let originalCount;
-      
+
       return request(app)
         .get('/api/articles?limit=100')
         .then(({ body }) => {
@@ -1164,7 +1232,7 @@ describe('DELETE /api/articles/:article_id', () => {
         .get('/api/articles/1/comments')
         .then(({ body }) => {
           expect(body.total_count).toBeGreaterThan(0);
-          
+
           return request(app).delete('/api/articles/1');
         })
         .then(() => {
@@ -1194,5 +1262,99 @@ describe('DELETE /api/articles/:article_id', () => {
           expect(body.msg).toBe('Bad request');
         });
     });
+  });
+});
+
+describe('POST /api/users/:username/topics', () => {
+  test('201: responds with status 201', () => {
+    const followTopic = { topic: 'paper' };
+
+    return request(app)
+      .post('/api/users/lurker/topics')
+      .send(followTopic)
+      .expect(201);
+  });
+
+  test('201: responds with user-topic relationship', () => {
+    const followTopic = { topic: 'paper' };
+
+    return request(app)
+      .post('/api/users/lurker/topics')
+      .send(followTopic)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.user_topic).toMatchObject({
+          username: 'lurker',
+          topic: 'paper',
+          created_at: expect.any(String)
+        });
+      });
+  });
+
+  test('201: topic appears in user\'s followed topics', () => {
+    const followTopic = { topic: 'paper' };
+
+    return request(app)
+      .post('/api/users/lurker/topics')
+      .send(followTopic)
+      .expect(201)
+      .then(() => {
+        return request(app).get('/api/users/lurker');
+      })
+      .then(({ body }) => {
+        expect(body.user.followed_topics).toContain('paper');
+      });
+
+  });
+
+  test('400: responds with error when topic is missing', () => {
+    return request(app)
+      .post('/api/users/butter_bridge/topics')
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Bad request');
+      });
+  });
+
+  test('404: responds with error for non-existent user', () => {
+    const followTopic = { topic: 'mitch' };
+
+    return request(app)
+      .post('/api/users/nonexistent/topics')
+      .send(followTopic)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('User not found');
+      });
+  });
+
+  test('404: responds with error for non-existent topic', () => {
+    const followTopic = { topic: 'nonexistent' };
+
+    return request(app)
+      .post('/api/users/butter_bridge/topics')
+      .send(followTopic)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('Topic not found');
+      });
+  });
+
+  test('400: responds with error when already following topic', () => {
+    const followTopic = { topic: 'cats' };
+
+    // Follow topic first time
+    return request(app)
+      .post('/api/users/lurker/topics')
+      .send(followTopic)
+      .expect(201)
+      .then(() => {
+        // Try to follow same topic again
+        return request(app)
+          .post('/api/users/lurker/topics')
+          .send(followTopic)
+          .expect(400);
+      });
   });
 });
