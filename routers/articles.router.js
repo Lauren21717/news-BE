@@ -10,6 +10,7 @@ const {
     getCommentsByArticleId,
     postComment
 } = require('../controllers/comments.controllers');
+const { postEmojiReaction } = require('../controllers/emoji-reactions.controllers');
 
 // handle /api/articles
 articlesRouter
@@ -29,5 +30,10 @@ articlesRouter
     .route('/:article_id/comments')
     .get(getCommentsByArticleId)
     .post(postComment);
+
+// Handle /api/articles/:article_id/reactions
+articlesRouter
+  .route('/:article_id/reactions')
+  .post(postEmojiReaction);
 
 module.exports = articlesRouter;

@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { selectEmojiReactionsByArticleId } = require("./emoji-reactions.models");
 
 exports.selectArticles = async (sort_by = 'created_at', order = 'desc', topic, limit = 10, p = 1) => {
     // Validation
@@ -76,8 +77,8 @@ exports.selectArticles = async (sort_by = 'created_at', order = 'desc', topic, l
     return { articles, total_count: totalCount };
 };
 
-exports.selectArticleById = (article_id) => {
-    return db.query(`
+exports.selectArticleById = async (article_id) => {
+    const articleResult = await db.query(`
         SELECT 
             articles.*, 
             COUNT(comments.comment_id) AS comment_count
@@ -86,15 +87,19 @@ exports.selectArticleById = (article_id) => {
         WHERE articles.article_id = $1
         GROUP BY articles.article_id;
     `, [article_id])
-        .then(({ rows }) => {
-            if (rows.length === 0) {
-                return Promise.reject({ status: 404, msg: 'Article not found' });
-            }
-            return {
-                ...rows[0],
-                comment_count: +rows[0].comment_count
-            };
-        });
+
+    if (articleResult.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: 'Article not found' });
+    }
+
+    const article = {
+        ...articleResult.rows[0],
+        comment_count: +articleResult.rows[0].comment_count
+    };
+
+    const emojiReactions = await selectEmojiReactionsByArticleId(article_id);
+
+    return { ...article, emoji_reactions: emojiReactions };
 };
 
 exports.updateArticleById = (article_id, inc_votes) => {
@@ -137,16 +142,16 @@ exports.insertArticle = (author, title, body, topic, article_img_url) => {
 
 exports.removeArticleById = (article_id) => {
     console.log('Attempting to delete article:', article_id);
-    
+
     return db.query(`
       DELETE FROM articles
       WHERE article_id = $1
       RETURNING *;
     `, [article_id])
-    .then(({ rows }) => {
-      if (rows.length === 0) {
-        return Promise.reject({ status: 404, msg: 'Article not found' });
-      }
-      return rows[0];
-    });
+        .then(({ rows }) => {
+            if (rows.length === 0) {
+                return Promise.reject({ status: 404, msg: 'Article not found' });
+            }
+            return rows[0];
+        });
 };
