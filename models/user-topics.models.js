@@ -1,14 +1,13 @@
 const db = require('../db/connection');
 
-exports.selectFollowedTopicsByUsername = (username) => {
-    return db.query(`
+exports.selectFollowedTopicsByUsername = async (username) => {
+    const { rows } = await db.query(`
         SELECT topic FROM user_topic 
         WHERE username = $1
         ORDER BY created_at DESC;
     `, [username])
-        .then(({ rows }) => {
-            return rows.map(row => row.topic);
-        });
+
+    return rows.map(row => row.topic);
 };
 
 exports.insertUserTopic = async (username, topic) => {
