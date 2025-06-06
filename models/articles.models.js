@@ -102,26 +102,26 @@ exports.selectArticleById = async (article_id) => {
     return { ...article, emoji_reactions: emojiReactions };
 };
 
-exports.updateArticleById = (article_id, inc_votes) => {
+exports.updateArticleById = async (article_id, inc_votes) => {
     if (typeof inc_votes !== 'number') {
         return Promise.reject({ status: 400, msg: 'Bad request' });
     }
 
-    return db.query(`
+    const { rows } = await db.query(`
         UPDATE articles
         SET votes = votes + $1
         WHERE article_id = $2
         RETURNING *;   
     `, [inc_votes, article_id])
-        .then(({ rows }) => {
-            if (rows.length === 0) {
-                return Promise.reject({ status: 404, msg: 'Article not found' });
-            }
-            return rows[0];
-        });
+
+    if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: 'Article not found' });
+    }
+
+    return rows[0];
 };
 
-exports.insertArticle = (author, title, body, topic, article_img_url) => {
+exports.insertArticle = async (author, title, body, topic, article_img_url) => {
     if (!author || !title || !body || !topic) {
         return Promise.reject({ status: 400, msg: 'Bad request' });
     }
@@ -129,29 +129,26 @@ exports.insertArticle = (author, title, body, topic, article_img_url) => {
     const defaultImageUrl = 'https://images.pexels.com/photos/11035481/pexels-photo-11035481.jpeg?w=700&h=700';
     const imageUrl = article_img_url || defaultImageUrl;
 
-    return db.query(`
+    const { rows } = await db.query(`
         INSERT INTO articles (author, title, body, topic, article_img_url)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING *;
-      `, [author, title, body, topic, imageUrl])
-        .then(({ rows }) => {
-            const article = rows[0];
-            return { ...article, comment_count: 0 };
-        });
+      `, [author, title, body, topic, imageUrl]);
+
+    const article = rows[0];
+    return { ...article, comment_count: 0 };
 }
 
-exports.removeArticleById = (article_id) => {
-    console.log('Attempting to delete article:', article_id);
-
-    return db.query(`
+exports.removeArticleById = async (article_id) => {
+    const { rows } = await db.query(`
       DELETE FROM articles
       WHERE article_id = $1
       RETURNING *;
     `, [article_id])
-        .then(({ rows }) => {
-            if (rows.length === 0) {
-                return Promise.reject({ status: 404, msg: 'Article not found' });
-            }
-            return rows[0];
-        });
+
+    if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: 'Article not found' });
+    }
+    
+    return rows[0];
 };
