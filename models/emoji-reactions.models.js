@@ -1,7 +1,7 @@
 const db = require('../db/connection');
 
-exports.selectEmojiReactionsByArticleId = (article_id) => {
-    return db.query(`
+exports.selectEmojiReactionsByArticleId = async (article_id) => {
+    const { rows } = await db.query(`
         SELECT 
             emojis.emoji,
             emojis.emoji_name,
@@ -13,12 +13,11 @@ exports.selectEmojiReactionsByArticleId = (article_id) => {
         HAVING COUNT(emoji_article_user.emoji_id) > 0
         ORDER BY count DESC;
     `, [article_id])
-        .then(({ rows }) => {
-            return rows.map(row => ({
-                ...row,
-                count: +row.count
-            }));
-        });
+
+    return rows.map(row => ({
+        ...row,
+        count: +row.count
+    }));
 };
 
 exports.insertEmojiReaction = async (article_id, emoji_name, username) => {
