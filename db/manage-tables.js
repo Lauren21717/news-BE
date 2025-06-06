@@ -54,7 +54,7 @@ exports.createTables = () => {
         return db.query(
             `CREATE TABLE comments(
                 comment_id SERIAL PRIMARY KEY,
-                article_id INTEGER NOT NULL REFERENCES articles(article_id),
+                article_id INTEGER NOT NULL REFERENCES articles(article_id) ON DELETE CASCADE,
                 body TEXT NOT NULL,
                 votes INTEGER DEFAULT 0,
                 author VARCHAR NOT NULL REFERENCES users(username),
@@ -85,7 +85,7 @@ exports.createTables = () => {
                 emoji_article_user_id SERIAL PRIMARY KEY,
                 emoji_id INTEGER NOT NULL REFERENCES emojis(emoji_id),
                 username VARCHAR NOT NULL REFERENCES users(username),
-                article_id INTEGER NOT NULL REFERENCES articles(article_id),
+                article_id INTEGER NOT NULL REFERENCES articles(article_id) ON DELETE CASCADE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(emoji_id, username, article_id)
             );`);

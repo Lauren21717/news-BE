@@ -14,6 +14,9 @@ exports.selectCommentsByArticleId = async (article_id, limit = 10, p = 1) => {
     // if article exists exists
     const articleCheck = await db.query('SELECT * FROM articles WHERE article_id = $1;', [article_id]);
     if (articleCheck.rows.length === 0) {
+        if (isNaN(Number(article_id))) {
+            return Promise.reject({ status: 400, msg: 'Bad request' });
+        }
         return Promise.reject({ status: 404, msg: 'Article not found' });
     }
 

@@ -1097,7 +1097,7 @@ describe('POST /api/topics', () => {
 
   test('400: responds with error when slug already exists', () => {
     const duplicateTopic = {
-      slug: 'mitch', // This already exists
+      slug: 'mitch',
       description: 'Duplicate slug'
     };
 
@@ -1108,5 +1108,91 @@ describe('POST /api/topics', () => {
       .then(({ body }) => {
         expect(body.msg).toBe('Bad request');
       });
+  });
+});
+
+describe('DELETE /api/articles/:article_id', () => {
+  describe('Basic functionality', () => {
+    test('204: responds with status 204', () => {
+      return request(app)
+        .delete('/api/articles/10')
+        .expect(204);
+    });
+
+    test('204: responds with no content', () => {
+      return request(app)
+        .delete('/api/articles/11')
+        .expect(204)
+        .then(({ body }) => {
+          expect(body).toEqual({});
+        });
+    });
+  });
+
+  describe('Database effects', () => {
+    test('204: article is deleted from database', () => {
+      return request(app)
+        .delete('/api/articles/12')
+        .expect(204)
+        .then(() => {
+          return request(app).get('/api/articles/12');
+        })
+        .then((response) => {
+          expect(response.status).toBe(404);
+        });
+    });
+
+    test('204: total article count decreases', () => {
+      let originalCount;
+      
+      return request(app)
+        .get('/api/articles?limit=100')
+        .then(({ body }) => {
+          originalCount = body.total_count;
+          return request(app).delete('/api/articles/13');
+        })
+        .then(() => {
+          return request(app).get('/api/articles?limit=100');
+        })
+        .then(({ body }) => {
+          expect(body.total_count).toBe(originalCount - 1);
+        });
+    });
+
+    test('204: related comments are also deleted', () => {
+      return request(app)
+        .get('/api/articles/1/comments')
+        .then(({ body }) => {
+          expect(body.total_count).toBeGreaterThan(0);
+          
+          return request(app).delete('/api/articles/1');
+        })
+        .then(() => {
+          return request(app).get('/api/articles/1/comments');
+        })
+        .then((response) => {
+          expect(response.status).toBe(404);
+        });
+    });
+  });
+
+  describe('Error handling', () => {
+    test('404: responds with error when article does not exist', () => {
+      return request(app)
+        .delete('/api/articles/999')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Article not found');
+        });
+    });
+
+    test('400: responds with error for invalid article_id', () => {
+      return request(app)
+        .delete('/api/articles/invalid')
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe('Bad request');
+        });
+    });
   });
 });
