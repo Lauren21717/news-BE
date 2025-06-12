@@ -1,0 +1,202 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NC News API Documentation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>NC News API</h1>
+        <p>A RESTful API for news articles, comments, users, and topics</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#topics">Topics</a></li>
+            <li><a href="#articles">Articles</a></li>
+            <li><a href="#comments">Comments</a></li>
+            <li><a href="#users">Users</a></li>
+            <li><a href="#reactions">Reactions</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>Welcome to the NC News API! This API provides endpoints for managing news articles, comments, users, and topics.</p>
+            <p><strong>Base URL:</strong> <code>https://nc-news-api-9v2f.onrender.com/api</code></p>
+            <p><strong>Response Format:</strong> All responses are in JSON format.</p>
+        </section>
+
+        <section id="topics">
+            <h2>Topics</h2>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <code>/api/topics</code>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns an array of all topics.</p>
+                    <h4>Example Response:</h4>
+                    <pre><code>{
+  "topics": [
+    { "slug": "mitch", "description": "The man, the Mitch, the legend" }
+  ]
+}</code></pre>
+                </div>
+            </div>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <code>/api/topics</code>
+                </div>
+                <div class="endpoint-body">
+                    <p>Creates a new topic.</p>
+                    <h4>Request Body:</h4>
+                    <pre><code>{
+  "slug": "coding",
+  "description": "All about programming"
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="articles">
+            <h2>Articles</h2>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <code>/api/articles</code>
+                </div>
+                <div class="endpoint-body">
+                    <p>Get all articles with optional pagination, sorting, and filtering.</p>
+                    <h4>Query Parameters:</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>sort_by</code></td><td>Column to sort by (e.g., votes, comment_count)</td><td>created_at</td></tr>
+                            <tr><td><code>order</code></td><td>Sort order (asc, desc)</td><td>desc</td></tr>
+                            <tr><td><code>topic</code></td><td>Filter by topic slug</td><td>(none)</td></tr>
+                            <tr><td><code>limit</code></td><td>Number of results per page</td><td>10</td></tr>
+                            <tr><td><code>p</code></td><td>Page number</td><td>1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <code>/api/articles/:article_id</code>
+                </div>
+                <div class="endpoint-body">
+                    <p>Get a single article by its ID.</p>
+                </div>
+            </div>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <code>/api/articles</code>
+                </div>
+                <div class="endpoint-body">
+                    <p>Creates a new article.</p>
+                </div>
+            </div>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method patch">PATCH</span>
+                    <code>/api/articles/:article_id</code>
+                </div>
+                <div class="endpoint-body">
+                    <p>Updates an article's vote count.</p>
+                    <h4>Request Body:</h4>
+                    <pre><code>{ "inc_votes": 1 }</code></pre>
+                </div>
+            </div>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete">DELETE</span>
+                    <code>/api/articles/:article_id</code>
+                </div>
+                <div class="endpoint-body">
+                    <p>Deletes an article. Responds with status 204 No Content.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="comments">
+            <h2>Comments</h2>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <code>/api/articles/:article_id/comments</code>
+                </div>
+                 <div class="endpoint-body">
+                    <p>Gets all comments for a given article ID.</p>
+                </div>
+            </div>
+             <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <code>/api/articles/:article_id/comments</code>
+                </div>
+                 <div class="endpoint-body">
+                    <p>Adds a new comment to an article.</p>
+                </div>
+            </div>
+             <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method patch">PATCH</span>
+                    <code>/api/comments/:comment_id</code>
+                </div>
+                 <div class="endpoint-body">
+                    <p>Updates a comment's vote count.</p>
+                </div>
+            </div>
+             <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete">DELETE</span>
+                    <code>/api/comments/:comment_id</code>
+                </div>
+                 <div class="endpoint-body">
+                    <p>Deletes a comment. Responds with status 204 No Content.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="users">
+            <h2>Users</h2>
+             <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <code>/api/users</code>
+                </div>
+                 <div class="endpoint-body">
+                    <p>Returns an array of all users.</p>
+                </div>
+            </div>
+             <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <code>/api/users/:username</code>
+                </div>
+                 <div class="endpoint-body">
+                    <p>Returns a single user by their username.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 NC News API. Built with Express.js and PostgreSQL.</p>
+    </footer>
+</body>
+</html>

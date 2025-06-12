@@ -103,6 +103,30 @@ exports.selectArticleById = async (article_id) => {
 };
 
 exports.updateArticleById = async (article_id, inc_votes) => {
+    if (inc_votes === undefined) {
+        const articleResult = await db.query(`
+            SELECT 
+                articles.*, 
+                COUNT(comments.comment_id) AS comment_count
+            FROM articles
+            LEFT JOIN comments ON articles.article_id = comments.article_id
+            WHERE articles.article_id = $1
+            GROUP BY articles.article_id;
+        `, [article_id]);
+
+        if (articleResult.rows.length === 0) {
+            return Promise.reject({ status: 404, msg: 'Article not found' });
+        }
+
+        const article = {
+            ...articleResult.rows[0],
+            comment_count: Number(articleResult.rows[0].comment_count)
+        };
+
+        const emojiReactions = await selectEmojiReactionsByArticleId(article_id);
+        return { ...article, emoji_reactions: emojiReactions };
+    }
+
     if (typeof inc_votes !== 'number') {
         return Promise.reject({ status: 400, msg: 'Bad request' });
     }
@@ -112,12 +136,12 @@ exports.updateArticleById = async (article_id, inc_votes) => {
         SET votes = votes + $1
         WHERE article_id = $2
         RETURNING *;   
-    `, [inc_votes, article_id])
+    `, [inc_votes, article_id]);
 
     if (rows.length === 0) {
         return Promise.reject({ status: 404, msg: 'Article not found' });
     }
-
+    
     return rows[0];
 };
 
