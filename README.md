@@ -2,7 +2,7 @@
 
 A RESTful API for a Reddit-style news website built with Node.js, Express, and PostgreSQL. Users can browse articles, leave comments, and vote on content.
 
-🌐 **[Live API](#)**
+🌐 **[Live API](https://news-be-k14i.onrender.com/)**
 
 ## Features
 
