@@ -7,6 +7,9 @@ const app = express();
 app.use(cors());
 app.use(express.json())
 
+// Serve static files
+app.use('/api', express.static('public'));
+
 // all routes
 app.use('/api', apiRouter);
 

@@ -42,10 +42,6 @@ exports.patchCommentById = async (req, res, next) => {
         const { comment_id } = req.params;
         const { inc_votes } = req.body;
 
-        if (inc_votes === undefined) {
-            return next({ status: 400, msg: 'Bad request' });
-        }
-
         const comment = await updateCommentById(comment_id, inc_votes);
         res.status(200).send({ comment });
     } catch (error) {
